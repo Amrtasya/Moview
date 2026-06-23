@@ -40,6 +40,9 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
 
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+
     // ROOM DATABASE
     implementation("androidx.room:room-runtime:2.6.1")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
