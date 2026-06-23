@@ -11,9 +11,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MoviewApp">
-
-        <activity android:name=".ui.DiaryLogsActivity" />
-
+        <activity
+            android:name=".ui.auth.SignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.LoginActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
