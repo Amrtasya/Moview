@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Moview App</string>
     <string name="diary_logs">Diary Logs</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
 </resources>
