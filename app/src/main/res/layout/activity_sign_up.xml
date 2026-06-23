@@ -41,5 +41,17 @@
         android:layout_height="wrap_content"
         android:text="Sign Up" />
 
+    <TextView
+        android:id="@+id/tvLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:minHeight="48dp"
+        android:layout_gravity="center_horizontal"
+        android:text="Already have an account?"
+        android:textColor="#0000EE"
+        android:clickable="true"
+        android:focusable="true" />
+
 </LinearLayout>
 
