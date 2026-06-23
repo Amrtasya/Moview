@@ -15,6 +15,9 @@ public class UserEntity {
     private String profileImage;
     private String bio;
 
+    public UserEntity() {
+    }
+
     public UserEntity(String username, String email, String password,
                       String profileImage, String bio) {
         this.username = username;
@@ -26,10 +29,6 @@ public class UserEntity {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getUsername() {
@@ -50,5 +49,29 @@ public class UserEntity {
 
     public String getBio() {
         return bio;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 }

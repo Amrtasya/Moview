@@ -42,6 +42,8 @@ dependencies {
 
     // ROOM DATABASE
     implementation("androidx.room:room-runtime:2.6.1")
+    implementation(libs.activity)
+    implementation(libs.constraintlayout)
     annotationProcessor("androidx.room:room-compiler:2.6.1")
 
     testImplementation(libs.junit)
