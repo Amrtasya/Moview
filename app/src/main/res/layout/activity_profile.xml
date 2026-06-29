@@ -154,17 +154,17 @@
             <Button
                 android:id="@+id/btnMovies"
                 android:layout_width="0dp"
-                android:layout_height="80dp"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
                 android:layout_marginEnd="6dp"
+                android:layout_weight="1"
                 android:text="MOVIES\nAll Watched Movies" />
 
             <Button
                 android:id="@+id/btnDiary"
                 android:layout_width="0dp"
                 android:layout_height="80dp"
-                android:layout_weight="1"
                 android:layout_marginStart="6dp"
+                android:layout_weight="1"
                 android:text="DIARY\nMonthly Logs" />
         </LinearLayout>
 
