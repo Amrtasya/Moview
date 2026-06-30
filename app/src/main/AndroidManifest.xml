@@ -12,22 +12,22 @@
         android:theme="@style/Theme.MoviewApp">
         <activity
             android:name=".ui.profile.EditProfileActivity"
-            android:exported="false" />
+            android:theme="@style/Theme.MoviewApp.NoActionBar" />
         <activity
             android:name=".ui.profile.ProfileActivity"
-            android:exported="false" />
+            android:theme="@style/Theme.MoviewApp.NoActionBar" />
         <activity
             android:name=".ui.auth.LoginActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.MoviewApp.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.auth.SignUpActivity"
-            android:exported="false" />
+            android:theme="@style/Theme.MoviewApp.NoActionBar" />
         <activity
             android:name=".ui.DiaryLogsActivity"
             android:exported="false" />
