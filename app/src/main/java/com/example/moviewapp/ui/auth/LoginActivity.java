@@ -1,26 +1,57 @@
 package com.example.moviewapp.ui.auth;
 
 import android.os.Bundle;
+import android.util.Log;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.moviewapp.R;
+import com.example.moviewapp.api.ApiService;
+import com.example.moviewapp.api.RetrofitClient;
+import com.example.moviewapp.model.Movie;
+import com.example.moviewapp.model.MovieResponse;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+        ApiService apiService =
+                RetrofitClient.getClient()
+                        .create(ApiService.class);
+
+        apiService.getPopularMovies("ce0282febe66aa78d512db45971aee56")
+                .enqueue(new Callback<MovieResponse>() {
+
+                    @Override
+                    public void onResponse(
+                            Call<MovieResponse> call,
+                            Response<MovieResponse> response) {
+
+                        if (response.isSuccessful()
+                                && response.body() != null) {
+
+                            for (Movie movie :
+                                    response.body().getResults()) {
+
+                                Log.d("TMDB", movie.getTitle());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(
+                            Call<MovieResponse> call,
+                            Throwable t) {
+
+                        Log.e("TMDB", t.getMessage());
+                    }
+                });
     }
 }
