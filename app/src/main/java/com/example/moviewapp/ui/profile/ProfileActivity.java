@@ -20,6 +20,7 @@ import com.example.moviewapp.data.database.AppDatabase;
 import com.example.moviewapp.data.database.DatabaseClient;
 import com.example.moviewapp.data.entity.UserEntity;
 import com.example.moviewapp.ui.auth.LoginActivity;
+import com.example.moviewapp.ui.movie.SearchActivity;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -130,7 +131,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Navigasi ke activity Cindy & Rahma (uncomment kalau activity-nya sudah ada)
         btnMovies.setOnClickListener(v ->
-                Toast.makeText(this, "Movies — coming soon", Toast.LENGTH_SHORT).show());
+                startActivity(new Intent(this, SearchActivity.class)));
         // startActivity(new Intent(this, MovieListActivity.class));
 
         btnDiary.setOnClickListener(v ->
