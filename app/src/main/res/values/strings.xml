@@ -1,7 +1,26 @@
 <resources>
+
     <string name="app_name">Moview App</string>
+
+    <!-- Diary -->
+    <string name="diary">Diary</string>
     <string name="diary_logs">Diary Logs</string>
+    <string name="sorted_by_date">SORTED BY DATE</string>
+    <string name="no_logs_found">No logs found</string>
+
+    <!-- Filter -->
+    <string name="all_results">All Results</string>
+    <string name="rating">Rating ▼</string>
+    <string name="genre">Genre ▼</string>
+    <string name="year">Year ▼</string>
+
+    <!-- Navigation -->
+    <string name="back">Back</string>
+
+    <!-- Authentication -->
     <string name="login">Login</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+
+
 </resources>

@@ -3,6 +3,7 @@ package com.example.moviewapp.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> {
 
-    List<DiaryEntity> diaryList;
+    private final List<DiaryEntity> diaryList;
 
     public DiaryAdapter(List<DiaryEntity> diaryList) {
         this.diaryList = diaryList;
@@ -40,6 +41,10 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
         holder.txtReview.setText(diary.getReview());
         holder.txtRating.setText(String.valueOf(diary.getRating()));
 
+        // Sementara masih placeholder
+        holder.txtDay.setText("--");
+        holder.txtMonth.setText("---");
+        holder.txtGenre.setText("Genre");
     }
 
     @Override
@@ -47,21 +52,27 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
         return diaryList.size();
     }
 
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
+        TextView txtDay;
+        TextView txtMonth;
+        ImageView imgPoster;
         TextView txtMovieTitle;
+        TextView txtGenre;
         TextView txtReview;
         TextView txtRating;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            txtDay = itemView.findViewById(R.id.txtDay);
+            txtMonth = itemView.findViewById(R.id.txtMonth);
+            imgPoster = itemView.findViewById(R.id.imgPoster);
+
             txtMovieTitle = itemView.findViewById(R.id.txtMovieTitle);
+            txtGenre = itemView.findViewById(R.id.txtGenre);
             txtReview = itemView.findViewById(R.id.txtReview);
             txtRating = itemView.findViewById(R.id.txtRating);
-
         }
     }
-
 }

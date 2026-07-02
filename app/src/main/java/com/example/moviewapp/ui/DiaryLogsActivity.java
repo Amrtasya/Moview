@@ -1,6 +1,8 @@
 package com.example.moviewapp.ui;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,6 +18,7 @@ import java.util.List;
 public class DiaryLogsActivity extends AppCompatActivity {
 
     RecyclerView rvDiary;
+    TextView txtEmpty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,15 +26,23 @@ public class DiaryLogsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_diary_logs);
 
         rvDiary = findViewById(R.id.rvDiary);
-
-        List<DiaryEntity> diaries =
-                DatabaseClient.getInstance(this)
-                        .diaryDao()
-                        .getAllDiary();
-
-        DiaryAdapter adapter = new DiaryAdapter(diaries);
+        txtEmpty = findViewById(R.id.txtEmpty);
 
         rvDiary.setLayoutManager(new LinearLayoutManager(this));
+
+        List<DiaryEntity> diaries = DatabaseClient.getInstance(this)
+                .diaryDao()
+                .getAllDiary();
+
+        DiaryAdapter adapter = new DiaryAdapter(diaries);
         rvDiary.setAdapter(adapter);
+
+        if (diaries.isEmpty()) {
+            txtEmpty.setVisibility(View.VISIBLE);
+            rvDiary.setVisibility(View.GONE);
+        } else {
+            txtEmpty.setVisibility(View.GONE);
+            rvDiary.setVisibility(View.VISIBLE);
+        }
     }
 }
