@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moviewapp.R;
 import com.example.moviewapp.model.Movie;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
+import android.util.Log;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
@@ -39,7 +41,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
         holder.tvTitle.setText(movie.getTitle());
 
-        // Poster nanti kita tampilkan pakai Glide/Picasso
+        Log.d("POSTER", movie.getPoster_path());
+
+        String imageUrl =
+                "https://image.tmdb.org/t/p/w500"
+                        + movie.getPoster_path();
+
+        Glide.with(holder.itemView.getContext())
+                .load(imageUrl)
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_background)
+                .into(holder.imgPoster);
     }
 
     @Override
