@@ -23,12 +23,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.view.View;
+import android.widget.LinearLayout;
+
 
 public class SearchActivity extends AppCompatActivity {
 
     private EditText etSearch;
     private Button btnSearch;
     private RecyclerView rvMovies;
+    private LinearLayout layoutEmpty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,9 @@ public class SearchActivity extends AppCompatActivity {
         btnSearch = findViewById(R.id.btnSearch);
         rvMovies = findViewById(R.id.rvMovies);
         rvMovies.setLayoutManager(new LinearLayoutManager(this));
+        layoutEmpty = findViewById(R.id.layoutEmpty);
+        layoutEmpty.setVisibility(View.VISIBLE);
+        rvMovies.setVisibility(View.GONE);
 
         btnSearch.setOnClickListener(v -> {
             String keyword = etSearch.getText().toString().trim();
@@ -57,21 +64,21 @@ public class SearchActivity extends AppCompatActivity {
                     public void onResponse(Call<MovieResponse> call,
                                            Response<MovieResponse> response) {
 
-                        if (response.isSuccessful() && response.body() != null) {
+                        if (response.body().getResults().isEmpty()) {
+
+                            layoutEmpty.setVisibility(View.VISIBLE);
+                            rvMovies.setVisibility(View.GONE);
+
+                        } else {
+
+                            layoutEmpty.setVisibility(View.GONE);
+                            rvMovies.setVisibility(View.VISIBLE);
 
                             MovieAdapter adapter =
                                     new MovieAdapter(response.body().getResults());
 
                             rvMovies.setAdapter(adapter);
 
-                            for (Movie movie : response.body().getResults()) {
-                                Log.d("TMDB", movie.getTitle());
-                            }
-
-                        } else {
-                            Toast.makeText(SearchActivity.this,
-                                    "Data tidak ditemukan",
-                                    Toast.LENGTH_SHORT).show();
                         }
                     }
 

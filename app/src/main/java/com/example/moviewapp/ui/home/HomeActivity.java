@@ -1,7 +1,11 @@
 package com.example.moviewapp.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,19 +17,13 @@ import com.example.moviewapp.adapter.HomeMovieAdapter;
 import com.example.moviewapp.api.ApiService;
 import com.example.moviewapp.api.RetrofitClient;
 import com.example.moviewapp.model.MovieResponse;
+import com.example.moviewapp.ui.movie.SearchActivity;
+import com.example.moviewapp.ui.profile.ProfileActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import android.content.Intent;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-
-import android.content.Intent;
-import android.widget.ImageButton;
-import com.example.moviewapp.ui.movie.SearchActivity;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -39,42 +37,83 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        ImageButton btnAddWatchlist = findViewById(R.id.btnAddWatchlist);
-        ImageButton btnExploreMovie = findViewById(R.id.btnExploreMovie);
+        // =========================
+        // Bind View
+        // =========================
 
-        btnAddWatchlist.setOnClickListener(v -> {
-            startActivity(new Intent(this, SearchActivity.class));
-        });
-
-        btnExploreMovie.setOnClickListener(v -> {
-            startActivity(new Intent(this, SearchActivity.class));
-        });
         rvRecentMovies = findViewById(R.id.rvRecentMovies);
         rvWatchlist = findViewById(R.id.rvWatchlist);
         layoutEmptyWatchlist = findViewById(R.id.layoutEmptyWatchlist);
         btnAddWatchlist = findViewById(R.id.btnAddWatchlist);
 
+        // =========================
+        // RecyclerView
+        // =========================
+
         rvRecentMovies.setLayoutManager(
-                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        );
-        rvWatchlist.setLayoutManager(
-                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+                new LinearLayoutManager(this,
+                        LinearLayoutManager.HORIZONTAL,
+                        false)
         );
 
-// Karena watchlist masih kosong
+        rvWatchlist.setLayoutManager(
+                new LinearLayoutManager(this,
+                        LinearLayoutManager.HORIZONTAL,
+                        false)
+        );
+
+        // =========================
+        // Watchlist masih kosong
+        // =========================
+
         rvWatchlist.setVisibility(View.GONE);
         layoutEmptyWatchlist.setVisibility(View.VISIBLE);
 
-        btnAddWatchlist.setOnClickListener(v -> {
+        // =========================
+        // Tombol tambah watchlist
+        // =========================
 
-            Intent intent = new Intent(
-                    HomeActivity.this,
-                    com.example.moviewapp.ui.movie.SearchActivity.class
-            );
+        btnAddWatchlist.setOnClickListener(v ->
+                startActivity(new Intent(HomeActivity.this, SearchActivity.class))
+        );
 
-            startActivity(intent);
+        // =========================
+        // Bottom Navigation
+        // =========================
 
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
+
+        bottomNav.setSelectedItemId(R.id.menu_home);
+
+        bottomNav.setOnItemSelectedListener(item -> {
+
+            int id = item.getItemId();
+
+            if (id == R.id.menu_home) {
+                return true;
+            }
+
+            if (id == R.id.menu_search) {
+                startActivity(new Intent(HomeActivity.this, SearchActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
+                return true;
+            }
+
+            if (id == R.id.menu_profile) {
+                startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
+                return true;
+            }
+
+            return false;
         });
+
+        // =========================
+        // Load API TMDB
+        // =========================
+
         loadPopularMovies();
     }
 
@@ -97,16 +136,16 @@ public class HomeActivity extends AppCompatActivity {
 
                             rvRecentMovies.setAdapter(adapter);
 
-                            Log.d("HOME", "Movie : "
-                                    + response.body().getResults().size());
+                            Log.d("HOME",
+                                    "Movie : " + response.body().getResults().size());
 
                         } else {
 
                             Toast.makeText(HomeActivity.this,
                                     "Gagal mengambil data",
                                     Toast.LENGTH_SHORT).show();
-                        }
 
+                        }
                     }
 
                     @Override
@@ -118,9 +157,7 @@ public class HomeActivity extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
 
                         Log.e("HOME", t.getMessage());
-
                     }
                 });
-
     }
 }
