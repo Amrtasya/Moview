@@ -16,7 +16,7 @@ import com.example.moviewapp.data.dao.UserDao;
 import com.example.moviewapp.data.database.AppDatabase;
 import com.example.moviewapp.data.database.DatabaseClient;
 import com.example.moviewapp.data.entity.UserEntity;
-import com.example.moviewapp.ui.profile.ProfileActivity;
+import com.example.moviewapp.ui.home.HomeActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -43,10 +43,10 @@ public class LoginActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
 
         // Cek apakah sudah login sebelumnya (auto-login)
-        if (sharedPreferences.getBoolean(KEY_IS_LOGGED_IN, false)) {
-            goToProfile();
-            return;
-        }
+//        if (sharedPreferences.getBoolean(KEY_IS_LOGGED_IN, false)) {
+//            goToHome();
+//            return;
+//        }
 
         // Bind Views
         etEmail    = findViewById(R.id.etEmail);
@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
             // Login berhasil — simpan sesi
             saveSession(user.getId());
             Toast.makeText(this, "Login berhasil!", Toast.LENGTH_SHORT).show();
-            goToProfile();
+            goToHome();
         } else {
             // Login gagal
             Toast.makeText(this, "Email atau password salah.", Toast.LENGTH_SHORT).show();
@@ -99,8 +99,8 @@ public class LoginActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    private void goToProfile() {
-        Intent intent = new Intent(this, ProfileActivity.class);
+    private void goToHome() {
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
