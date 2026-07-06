@@ -1,97 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="#0D0D0D">
 
-    <!-- Toolbar ungu "Moview App" -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="#6200EE"
-        android:gravity="center_vertical"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Moview App"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <!-- Konten Profile -->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollProfile"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp">
+            android:orientation="vertical">
 
-            <!-- Title -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Profile"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="24dp" />
-
-            <!-- Avatar placeholder -->
-            <ImageView
-                android:id="@+id/ivProfilePhoto"
-                android:layout_width="88dp"
-                android:layout_height="88dp"
-                android:layout_gravity="center_horizontal"
-                android:src="@android:drawable/ic_menu_myplaces"
-                android:scaleType="centerCrop" />
-
-            <!-- Name -->
-            <TextView
-                android:id="@+id/tvProfileName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Alex Rivers"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="12dp" />
-
-            <!-- Username -->
-            <TextView
-                android:id="@+id/tvUsername"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="\@alexrivers21"
-                android:textSize="14sp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="16dp" />
-
-            <!-- Edit Profile & Share Buttons -->
+            <!-- Top Bar -->
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
                 android:orientation="horizontal"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="24dp">
+                android:gravity="center_vertical"
+                android:paddingStart="8dp"
+                android:paddingEnd="16dp">
 
-                <Button
-                    android:id="@+id/btnEditProfile"
+                <ImageButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@android:drawable/ic_media_previous"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Back"
+                    app:tint="#00E5A8" />
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Edit Profile" />
+                    android:text="Profile"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="4dp" />
+            </LinearLayout>
 
-                <Button
-                    android:id="@+id/btnShare"
+            <!-- Avatar — BULAT via bg_avatar_circle -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingTop="8dp"
+                android:paddingBottom="20dp">
+
+                <ImageView
+                    android:id="@+id/ivProfilePhoto"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:src="@drawable/outline_account_circle_50"
+                    android:background="@drawable/bg_avatar_circle"
+                    android:padding="20dp"
+                    android:scaleType="centerInside"
+                    app:tint="#00E5A8" />
+
+                <TextView
+                    android:id="@+id/tvProfileName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:text="Share" />
+                    android:text="Alex Rivers"
+                    android:textColor="#FFFFFF"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="12dp" />
+
+                <TextView
+                    android:id="@+id/tvUsername"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="\@alexrivers21"
+                    android:textColor="#9E9E9E"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp" />
+
+                <!-- Edit Profile & Share — rounded dark -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="16dp">
+
+                    <Button
+                        android:id="@+id/btnEditProfile"
+                        android:layout_width="130dp"
+                        android:layout_height="38dp"
+                        android:text="Edit Profile"
+                        android:textColor="#FFFFFF"
+                        android:textSize="13sp"
+                        android:background="@drawable/bg_button_dark"
+                        android:stateListAnimator="@null" />
+
+                    <Button
+                        android:id="@+id/btnShare"
+                        android:layout_width="100dp"
+                        android:layout_height="38dp"
+                        android:layout_marginStart="12dp"
+                        android:text="Share"
+                        android:textColor="#FFFFFF"
+                        android:textSize="13sp"
+                        android:background="@drawable/bg_button_dark"
+                        android:stateListAnimator="@null" />
+                </LinearLayout>
             </LinearLayout>
 
             <!-- Stats Row -->
@@ -99,7 +122,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="24dp">
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="20dp">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -112,14 +137,16 @@
                         android:id="@+id/tvMovieCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="48"
-                        android:textSize="20sp"
+                        android:text="0"
+                        android:textColor="#00E5A8"
+                        android:textSize="22sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="MOVIES"
+                        android:textColor="#9E9E9E"
                         android:textSize="11sp" />
                 </LinearLayout>
 
@@ -134,14 +161,16 @@
                         android:id="@+id/tvThisYear"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="7"
-                        android:textSize="20sp"
+                        android:text="0"
+                        android:textColor="#00E5A8"
+                        android:textSize="22sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="THIS YEAR"
+                        android:textColor="#9E9E9E"
                         android:textSize="11sp" />
                 </LinearLayout>
 
@@ -156,191 +185,283 @@
                         android:id="@+id/tvAvgRating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="4.2"
-                        android:textSize="20sp"
+                        android:text="0.0"
+                        android:textColor="#00E5A8"
+                        android:textSize="22sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="AVG. RATING"
+                        android:textColor="#9E9E9E"
                         android:textSize="11sp" />
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Menu Grid: Movies & Diary -->
+            <!-- 4 Menu Buttons — rounded via bg_button_menu -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="8dp">
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="8dp">
 
                 <Button
                     android:id="@+id/btnMovies"
                     android:layout_width="0dp"
-                    android:layout_height="80dp"
-                    android:layout_marginEnd="6dp"
+                    android:layout_height="90dp"
                     android:layout_weight="1"
-                    android:text="MOVIES\nAll Watched Movies" />
+                    android:layout_marginEnd="6dp"
+                    android:text="MOVIES\nAll Watched Movies"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_button_menu"
+                    android:stateListAnimator="@null" />
 
                 <Button
                     android:id="@+id/btnDiary"
                     android:layout_width="0dp"
-                    android:layout_height="80dp"
-                    android:layout_marginStart="6dp"
+                    android:layout_height="90dp"
                     android:layout_weight="1"
-                    android:text="DIARY\nMonthly Logs" />
+                    android:layout_marginStart="6dp"
+                    android:text="DIARY\nMonthly Logs"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_button_menu"
+                    android:stateListAnimator="@null" />
             </LinearLayout>
 
-            <!-- Menu Grid: Watchlist & Favorite -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="24dp">
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="20dp">
 
                 <Button
                     android:id="@+id/btnWatchlist"
                     android:layout_width="0dp"
-                    android:layout_height="80dp"
+                    android:layout_height="90dp"
                     android:layout_weight="1"
                     android:layout_marginEnd="6dp"
-                    android:text="WATCHLIST\nPlan to Watch" />
+                    android:text="WATCHLIST\nPlan to Watch"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_button_menu"
+                    android:stateListAnimator="@null" />
 
                 <Button
                     android:id="@+id/btnFavorite"
                     android:layout_width="0dp"
-                    android:layout_height="80dp"
+                    android:layout_height="90dp"
                     android:layout_weight="1"
                     android:layout_marginStart="6dp"
-                    android:text="FAVORITE\nTop Picks Movies" />
+                    android:text="FAVORITE\nTop Picks Movies"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_button_menu"
+                    android:stateListAnimator="@null" />
             </LinearLayout>
 
             <!-- Preferences Section -->
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="PREFERENCES"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Dark Mode"
-                    android:textSize="15sp" />
-
-                <Switch
-                    android:id="@+id/switchDarkMode"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:checked="true" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/rowAppSettings"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:clickable="true"
-                android:focusable="true"
-                android:layout_marginBottom="24dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="App Settings"
-                    android:textSize="15sp" />
+                android:orientation="vertical"
+                android:background="#1A1A1A"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="12dp"
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=">" />
+                    android:text="PREFERENCES"
+                    android:textColor="#9E9E9E"
+                    android:textSize="11sp"
+                    android:letterSpacing="0.1"
+                    android:layout_marginBottom="12dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Dark Mode"
+                        android:textColor="#FFFFFF"
+                        android:textSize="15sp" />
+
+                    <Switch
+                        android:id="@+id/switchDarkMode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:thumbTint="#00E5A8"
+                        android:trackTint="#2A4A2A" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#2A2A2A" />
+
+                <LinearLayout
+                    android:id="@+id/rowAppSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="App Settings"
+                        android:textColor="#FFFFFF"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="›"
+                        android:textColor="#9E9E9E"
+                        android:textSize="20sp" />
+                </LinearLayout>
             </LinearLayout>
 
             <!-- Application Section -->
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="APPLICATION"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
-
-            <LinearLayout
-                android:id="@+id/rowAbout"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:clickable="true"
-                android:focusable="true">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="About Moview"
-                    android:textSize="15sp" />
+                android:orientation="vertical"
+                android:background="#1A1A1A"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=">" />
+                    android:text="APPLICATION"
+                    android:textColor="#9E9E9E"
+                    android:textSize="11sp"
+                    android:letterSpacing="0.1"
+                    android:layout_marginBottom="12dp" />
+
+                <LinearLayout
+                    android:id="@+id/rowAbout"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="About Moview"
+                        android:textColor="#FFFFFF"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="›"
+                        android:textColor="#9E9E9E"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#2A2A2A" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Version"
+                        android:textColor="#FFFFFF"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="v2.4.1-stable"
+                        android:textColor="#9E9E9E"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#2A2A2A" />
+
+                <LinearLayout
+                    android:id="@+id/rowLogOut"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Log Out"
+                        android:textColor="#F44336"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="›"
+                        android:textColor="#F44336"
+                        android:textSize="20sp" />
+                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
+            <!-- Footer -->
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Version"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="v2.4.1-stable"
-                    android:textSize="13sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/rowLogOut"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:clickable="true"
-                android:focusable="true">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Log Out"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=">" />
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:text="Powered by TMDB API. All rights reserved."
+                android:textColor="#616161"
+                android:textSize="11sp"
+                android:gravity="center"
+                android:paddingBottom="16dp" />
 
         </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Bottom Navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#121212"
+        app:itemIconTint="@color/bottom_nav_color"
+        app:itemTextColor="@color/bottom_nav_color"
+        app:menu="@menu/bottom_nav_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,28 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#0D0D0D">
 
-    <!-- Toolbar ungu "Moview App" -->
+    <!-- Top Bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="#6200EE"
+        android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingStart="16dp"
+        android:paddingStart="8dp"
         android:paddingEnd="16dp">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@android:drawable/ic_media_previous"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            app:tint="#00E5A8" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Moview App"
+            android:text="Edit Profile"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_marginStart="4dp" />
     </LinearLayout>
 
-    <!-- Konten Edit Profile -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -31,114 +42,162 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:paddingBottom="40dp">
 
-            <!-- Title -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Edit Profile"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="24dp" />
-
-            <!-- Avatar -->
-            <ImageView
-                android:id="@+id/ivProfilePhoto"
-                android:layout_width="88dp"
-                android:layout_height="88dp"
-                android:layout_gravity="center_horizontal"
-                android:src="@android:drawable/ic_menu_myplaces"
-                android:scaleType="centerCrop"
-                android:layout_marginBottom="8dp" />
-
-            <!-- Change Photo Button -->
-            <Button
-                android:id="@+id/btnChangePhoto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="Change Photo"
-                android:layout_marginBottom="24dp" />
-
-            <!-- Name -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Name"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="4dp" />
-
-            <EditText
-                android:id="@+id/etName"
+            <!-- Avatar — BULAT via bg_avatar_circle -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:hint="Your name"
-                android:inputType="textPersonName"
-                android:layout_marginBottom="16dp" />
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingTop="24dp"
+                android:paddingBottom="28dp">
 
-            <!-- Username -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="User Name"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="4dp" />
+                <ImageView
+                    android:id="@+id/ivProfilePhoto"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:src="@drawable/outline_account_circle_50"
+                    android:background="@drawable/bg_avatar_circle"
+                    android:padding="20dp"
+                    android:scaleType="centerInside"
+                    android:layout_marginBottom="12dp"
+                    app:tint="#00E5A8" />
 
-            <EditText
-                android:id="@+id/etUsername"
+                <!-- Change Photo — rounded green -->
+                <Button
+                    android:id="@+id/btnChangePhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="Change Photo"
+                    android:textColor="#000000"
+                    android:textSize="13sp"
+                    android:background="@drawable/bg_button_green"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:stateListAnimator="@null" />
+            </LinearLayout>
+
+            <!-- Form Fields -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:hint="\@username"
-                android:layout_marginBottom="16dp" />
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
 
-            <!-- Email -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Email Address"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="4dp" />
+                <!-- Name -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Name"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="6dp" />
 
-            <EditText
-                android:id="@+id/etEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:hint="email@example.com"
-                android:inputType="textEmailAddress"
-                android:layout_marginBottom="16dp" />
+                <EditText
+                    android:id="@+id/etName"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_edit_text"
+                    android:hint="Your name"
+                    android:textColorHint="#616161"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:inputType="textPersonName"
+                    android:singleLine="true"
+                    android:layout_marginBottom="20dp" />
 
-            <!-- Password -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Password"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="4dp" />
+                <!-- Username -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="User Name"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="6dp" />
 
-            <EditText
-                android:id="@+id/etPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:hint="New password"
-                android:inputType="textPassword"
-                android:layout_marginBottom="32dp" />
+                <EditText
+                    android:id="@+id/etUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_edit_text"
+                    android:hint="\@username"
+                    android:textColorHint="#616161"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:singleLine="true"
+                    android:layout_marginBottom="20dp" />
 
-            <!-- Save Button -->
-            <Button
-                android:id="@+id/btnSaveChanges"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="SAVE CHANGES" />
+                <!-- Email -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email Address"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="6dp" />
 
+                <EditText
+                    android:id="@+id/etEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_edit_text"
+                    android:hint="email@example.com"
+                    android:textColorHint="#616161"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:inputType="textEmailAddress"
+                    android:singleLine="true"
+                    android:layout_marginBottom="20dp" />
+
+                <!-- Password -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Password"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="6dp" />
+
+                <EditText
+                    android:id="@+id/etPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_edit_text"
+                    android:hint="New password (optional)"
+                    android:textColorHint="#616161"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:inputType="textPassword"
+                    android:singleLine="true"
+                    android:layout_marginBottom="36dp" />
+
+                <!-- Save Button — rounded green -->
+                <Button
+                    android:id="@+id/btnSaveChanges"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:text="SAVE CHANGES"
+                    android:textColor="#000000"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_button_green"
+                    android:stateListAnimator="@null" />
+
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

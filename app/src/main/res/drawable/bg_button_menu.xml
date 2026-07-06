@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/bg_button_menu.xml -->
+<!-- Background untuk 4 menu button di Profile (Movies, Diary, Watchlist, Favorite) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#00E5A8" />
+    <corners android:radius="12dp" />
+</shape>
