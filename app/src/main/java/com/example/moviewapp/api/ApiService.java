@@ -18,4 +18,11 @@ public interface ApiService {
             @Query("api_key") String apiKey,
             @Query("query") String query
     );
+    @GET("discover/movie")
+    Call<MovieResponse> discoverMovies(
+            @Query("api_key") String apiKey,
+            @Query("with_genres") String genreId,
+            @Query("primary_release_year") String year,
+            @Query("vote_average.gte") String rating
+    );
 }

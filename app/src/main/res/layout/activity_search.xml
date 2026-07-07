@@ -86,24 +86,28 @@
                     android:id="@+id/btnAll"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
+                    android:layout_marginEnd="8dp"
                     android:text="ALL"/>
 
                 <Button
                     android:id="@+id/btnGenre"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
+                    android:layout_marginEnd="8dp"
                     android:text="Genre ▼"/>
 
                 <Button
                     android:id="@+id/btnYear"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
+                    android:layout_marginEnd="8dp"
                     android:text="Year ▼"/>
 
                 <Button
                     android:id="@+id/btnRating"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
+                    android:layout_marginEnd="8dp"
                     android:text="Rating ▼"/>
 
             </LinearLayout>
