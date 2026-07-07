@@ -12,7 +12,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MoviewApp">
-
+        <activity
+            android:name=".ui.movie.SearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.EditProfileActivity"
+            android:theme="@style/Theme.MoviewApp.NoActionBar" />
+        <activity
+            android:name=".ui.profile.ProfileActivity"
+            android:theme="@style/Theme.MoviewApp.NoActionBar" />
         <activity
             android:name=".ui.auth.LoginActivity"
             android:exported="true"
@@ -23,35 +31,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.auth.SignUpActivity"
             android:theme="@style/Theme.MoviewApp.NoActionBar" />
-
         <activity
-            android:name=".ui.profile.ProfileActivity"
-            android:theme="@style/Theme.MoviewApp.NoActionBar" />
-
-        <activity
-            android:name=".ui.profile.EditProfileActivity"
-            android:theme="@style/Theme.MoviewApp.NoActionBar" />
-
+            android:name=".ui.DiaryLogsActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.home.HomeActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.movie.SearchActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.diary.DiaryLogsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.diary.WatchlistActivity"
-            android:exported="false" />
-
+            android:exported="false"/>
     </application>
 
 </manifest>
