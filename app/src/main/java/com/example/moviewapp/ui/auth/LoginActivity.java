@@ -16,6 +16,7 @@ import com.example.moviewapp.data.dao.UserDao;
 import com.example.moviewapp.data.database.AppDatabase;
 import com.example.moviewapp.data.database.DatabaseClient;
 import com.example.moviewapp.data.entity.UserEntity;
+import com.example.moviewapp.ui.home.HomeActivity;
 import com.example.moviewapp.ui.profile.ProfileActivity;
 
 public class LoginActivity extends AppCompatActivity {
@@ -27,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     private UserDao userDao;
     private SharedPreferences sharedPreferences;
 
-    // Key untuk SharedPreferences (dipakai juga di Activity lain)
+    // ===== KEY SESSION — public static agar bisa dipakai Activity lain =====
     public static final String PREF_NAME        = "moview_session";
     public static final String KEY_USER_ID      = "user_id";
     public static final String KEY_IS_LOGGED_IN = "is_logged_in";
@@ -35,29 +36,29 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
 
-        // Ambil DAO lewat DatabaseClient
-        AppDatabase db    = DatabaseClient.getInstance(this);
-        userDao           = db.userDao();
+        // Init SharedPreferences SEBELUM setContentView
+        // supaya auto-login bisa redirect tanpa render layout dulu
         sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
 
-        // Cek apakah sudah login sebelumnya (auto-login)
+        // ===== CEK SESSION — kalau sudah login, langsung ke Home =====
         if (sharedPreferences.getBoolean(KEY_IS_LOGGED_IN, false)) {
-            goToProfile();
-            return;
+            goToHome();
+            return; // stop, tidak perlu lanjut render layout login
         }
 
-        // Bind Views
+        setContentView(R.layout.activity_login);
+
+        AppDatabase db = DatabaseClient.getInstance(this);
+        userDao        = db.userDao();
+
         etEmail    = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnLogin   = findViewById(R.id.btnLogin);
         tvSignUp   = findViewById(R.id.tvSignUp);
 
-        // Tombol LOGIN
         btnLogin.setOnClickListener(v -> attemptLogin());
 
-        // Link ke Sign Up
         tvSignUp.setOnClickListener(v ->
                 startActivity(new Intent(this, SignUpActivity.class)));
     }
@@ -66,7 +67,6 @@ public class LoginActivity extends AppCompatActivity {
         String email    = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
-        // --- Validasi field kosong ---
         if (TextUtils.isEmpty(email)) {
             etEmail.setError("Email tidak boleh kosong");
             etEmail.requestFocus();
@@ -78,30 +78,29 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // --- Cek ke database ---
         UserEntity user = userDao.login(email, password);
 
         if (user != null) {
-            // Login berhasil — simpan sesi
             saveSession(user.getId());
             Toast.makeText(this, "Login berhasil!", Toast.LENGTH_SHORT).show();
-            goToProfile();
+            goToHome();
         } else {
-            // Login gagal
             Toast.makeText(this, "Email atau password salah.", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void saveSession(int userId) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(KEY_IS_LOGGED_IN, true);
-        editor.putInt(KEY_USER_ID, userId);
-        editor.apply();
+        sharedPreferences.edit()
+                .putBoolean(KEY_IS_LOGGED_IN, true)
+                .putInt(KEY_USER_ID, userId)
+                .apply(); // apply() = async, lebih aman dari commit()
     }
 
-    private void goToProfile() {
-        Intent intent = new Intent(this, ProfileActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+    private void goToHome() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        // FLAG_ACTIVITY_CLEAR_TASK: hapus semua activity di back stack
+        // supaya user tidak bisa back ke halaman login setelah login
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }

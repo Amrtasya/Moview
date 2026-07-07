@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/bg_avatar_circle.xml -->
+<!-- Background bulat untuk foto profil di Profile dan Edit Profile -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="#1A2A1A" />
+</shape>

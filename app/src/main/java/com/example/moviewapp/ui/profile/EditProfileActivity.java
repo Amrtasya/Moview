@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -27,15 +28,16 @@ public class EditProfileActivity extends AppCompatActivity {
     // Views
     private ImageView ivProfilePhoto;
     private Button btnChangePhoto, btnSaveChanges;
+    private ImageButton btnBack;
     private EditText etName, etUsername, etEmail, etPassword;
 
     // Data
     private UserDao userDao;
     private SharedPreferences sharedPreferences;
     private int currentUserId;
-    private String selectedPhotoUri = null; // URI foto yang dipilih dari galeri
+    private String selectedPhotoUri = null;
 
-    // Launcher untuk buka galeri
+    // Launcher galeri
     private final ActivityResultLauncher<Intent> galleryLauncher =
             registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
@@ -44,7 +46,6 @@ public class EditProfileActivity extends AppCompatActivity {
                             Uri imageUri = result.getData().getData();
                             if (imageUri != null) {
                                 selectedPhotoUri = imageUri.toString();
-                                // Preview foto baru
                                 ivProfilePhoto.setImageURI(imageUri);
                             }
                         }
@@ -55,7 +56,6 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        // Ambil DAO lewat DatabaseClient
         AppDatabase db    = DatabaseClient.getInstance(this);
         userDao           = db.userDao();
         sharedPreferences = getSharedPreferences(LoginActivity.PREF_NAME, MODE_PRIVATE);
@@ -69,14 +69,20 @@ public class EditProfileActivity extends AppCompatActivity {
         bindViews();
         loadCurrentUserData();
 
+        // ===== TOMBOL BACK → ke ProfileActivity =====
+        btnBack.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+            finish();
+        });
+
         btnChangePhoto.setOnClickListener(v -> openGallery());
         btnSaveChanges.setOnClickListener(v -> attemptSave());
     }
 
-    // ---------------------------------------------------------------
-    // BIND VIEWS
-    // ---------------------------------------------------------------
     private void bindViews() {
+        btnBack        = findViewById(R.id.btnBack);
         ivProfilePhoto = findViewById(R.id.ivProfilePhoto);
         btnChangePhoto = findViewById(R.id.btnChangePhoto);
         etName         = findViewById(R.id.etName);
@@ -86,44 +92,33 @@ public class EditProfileActivity extends AppCompatActivity {
         btnSaveChanges = findViewById(R.id.btnSaveChanges);
     }
 
-    // ---------------------------------------------------------------
-    // LOAD DATA USER (pre-fill form)
-    // ---------------------------------------------------------------
     private void loadCurrentUserData() {
         UserEntity user = userDao.getUserById(currentUserId);
-
         if (user == null) return;
 
-        etName.setText(user.getBio());         // nama disimpan di field bio
+        etName.setText(user.getBio());
         etUsername.setText(user.getUsername());
         etEmail.setText(user.getEmail());
-        etPassword.setText("");                // jangan tampilkan password lama
+        etPassword.setText("");
 
         if (user.getProfileImage() != null && !user.getProfileImage().isEmpty()) {
             selectedPhotoUri = user.getProfileImage();
-            // Kalau mau preview foto asli, bisa pakai ivProfilePhoto.setImageURI(Uri.parse(...))
+            ivProfilePhoto.setImageURI(Uri.parse(selectedPhotoUri));
         }
     }
 
-    // ---------------------------------------------------------------
-    // BUKA GALERI
-    // ---------------------------------------------------------------
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
         galleryLauncher.launch(intent);
     }
 
-    // ---------------------------------------------------------------
-    // SAVE CHANGES
-    // ---------------------------------------------------------------
     private void attemptSave() {
         String name     = etName.getText().toString().trim();
         String username = etUsername.getText().toString().trim();
         String email    = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
-        // Validasi field wajib
         if (TextUtils.isEmpty(name)) {
             etName.setError("Nama tidak boleh kosong");
             etName.requestFocus();
@@ -139,14 +134,12 @@ public class EditProfileActivity extends AppCompatActivity {
             etEmail.requestFocus();
             return;
         }
-        // Password opsional — hanya diupdate kalau diisi
         if (!TextUtils.isEmpty(password) && password.length() < 6) {
             etPassword.setError("Password minimal 6 karakter");
             etPassword.requestFocus();
             return;
         }
 
-        // --- Update ke database ---
         UserEntity user = userDao.getUserById(currentUserId);
         if (user == null) return;
 
@@ -157,7 +150,6 @@ public class EditProfileActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(password)) {
             user.setPassword(password);
         }
-
         if (selectedPhotoUri != null) {
             user.setProfileImage(selectedPhotoUri);
         }
@@ -165,6 +157,11 @@ public class EditProfileActivity extends AppCompatActivity {
         userDao.update(user);
 
         Toast.makeText(this, "Profil berhasil diperbarui!", Toast.LENGTH_SHORT).show();
-        finish(); // kembali ke ProfileActivity
+
+        // Kembali ke ProfileActivity setelah save
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        finish();
     }
 }
