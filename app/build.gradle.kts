@@ -42,15 +42,16 @@ dependencies {
 
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
-    implementation("androidx.cardview:cardview:1.0.0") // Tambahkan ini
+    implementation("androidx.cardview:cardview:1.0.0")
 
     // ROOM DATABASE
     implementation("androidx.room:room-runtime:2.6.1")
-    implementation(libs.activity)
-    implementation(libs.constraintlayout)
     annotationProcessor("androidx.room:room-compiler:2.6.1")
 
-    // RETROFIT TMBD
+    implementation(libs.activity)
+    implementation(libs.constraintlayout)
+
+    // RETROFIT TMDB
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
@@ -58,8 +59,6 @@ dependencies {
     // GLIDE
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
-
-    implementation("androidx.cardview:cardview:1.0.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

@@ -19,7 +19,7 @@ import com.example.moviewapp.data.entity.WatchlistEntity;
                 WatchlistEntity.class,
                 FavoriteEntity.class
         },
-        version = 1,
+        version = 2,
         exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {

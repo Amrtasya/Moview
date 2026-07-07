@@ -14,6 +14,7 @@
     <string name="year">Year ▼</string>
 
     <string name="back">Back</string>
+
     <string name="login">Login</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -37,5 +38,9 @@
     <string name="text_counter_default">0/500</string>
     <string name="btn_save_experience">💾 SAVE EXPERIENCE</string>
     <string name="btn_discard_changes">Discard Changes</string>
+
+    <string name="watchlist">Watchlist</string>
+    <string name="search_watchlist">Search watchlist...</string>
+    <string name="add_watchlist">Add Watchlist</string>
 
 </resources>
