@@ -1,5 +1,7 @@
 package com.example.moviewapp.model;
 
+import java.util.List;
+
 public class Movie {
 
     private int id;
@@ -11,6 +13,9 @@ public class Movie {
 
     // Tanggal rilis
     private String release_date;
+
+    // Genre
+    private List<Integer> genre_ids;
 
     // =====================
     // GETTER
@@ -36,6 +41,10 @@ public class Movie {
         return release_date;
     }
 
+    public List<Integer> getGenre_ids() {
+        return genre_ids;
+    }
+
     // =====================
     // Helper
     // =====================
@@ -49,5 +58,54 @@ public class Movie {
             return release_date.substring(0, 4);
         }
         return "-";
+    }
+
+    public String getGenreName() {
+
+        if (genre_ids == null || genre_ids.isEmpty()) {
+            return "Movie";
+        }
+
+        switch (genre_ids.get(0)) {
+
+            case 28:
+                return "Action";
+
+            case 12:
+                return "Adventure";
+
+            case 16:
+                return "Animation";
+
+            case 35:
+                return "Comedy";
+
+            case 80:
+                return "Crime";
+
+            case 18:
+                return "Drama";
+
+            case 14:
+                return "Fantasy";
+
+            case 27:
+                return "Horror";
+
+            case 9648:
+                return "Mystery";
+
+            case 10749:
+                return "Romance";
+
+            case 878:
+                return "Sci-Fi";
+
+            case 53:
+                return "Thriller";
+
+            default:
+                return "Movie";
+        }
     }
 }

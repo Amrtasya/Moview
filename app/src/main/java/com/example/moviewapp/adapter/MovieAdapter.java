@@ -41,7 +41,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
         holder.tvTitle.setText(movie.getTitle());
 
-        Log.d("POSTER", movie.getPoster_path());
+        // Genre sementara
+        holder.tvGenre.setText(
+                movie.getGenreName() + " • " + movie.getYear()
+        );
+
+        // Belum ada rating user
+        holder.tvRating.setText("☆☆☆☆☆");
+        holder.tvStatus.setText("Not Rated Yet");
 
         String imageUrl =
                 "https://image.tmdb.org/t/p/w500"
@@ -62,12 +69,19 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     static class MovieViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvTitle;
+        TextView tvGenre;
+        TextView tvRating;
+        TextView tvStatus;
         ImageView imgPoster;
 
         public MovieViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tvTitle = itemView.findViewById(R.id.tvTitle);
+            tvGenre = itemView.findViewById(R.id.tvGenre);
+            tvRating = itemView.findViewById(R.id.tvRating);
+            tvStatus = itemView.findViewById(R.id.tvStatus);
+
             imgPoster = itemView.findViewById(R.id.imgPoster);
         }
     }

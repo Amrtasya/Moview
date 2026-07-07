@@ -20,6 +20,7 @@ import com.example.moviewapp.model.MovieResponse;
 import com.example.moviewapp.ui.movie.SearchActivity;
 import com.example.moviewapp.ui.profile.ProfileActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.moviewapp.ui.DiaryLogsActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -95,6 +96,17 @@ public class HomeActivity extends AppCompatActivity {
 
             if (id == R.id.menu_search) {
                 startActivity(new Intent(HomeActivity.this, SearchActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
+                return true;
+            }
+
+            if (id == R.id.menu_history) {
+
+                startActivity(
+                        new Intent(HomeActivity.this,
+                                DiaryLogsActivity.class));
+
                 overridePendingTransition(0, 0);
                 finish();
                 return true;

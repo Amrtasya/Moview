@@ -25,6 +25,13 @@ import retrofit2.Response;
 
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
+
+import android.content.Intent;
+
+import com.example.moviewapp.ui.home.HomeActivity;
+import com.example.moviewapp.ui.profile.ProfileActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 public class SearchActivity extends AppCompatActivity {
@@ -33,6 +40,10 @@ public class SearchActivity extends AppCompatActivity {
     private Button btnSearch;
     private RecyclerView rvMovies;
     private LinearLayout layoutEmpty;
+    private Button btnGenre;
+    private Button btnYear;
+    private Button btnRating;
+    private Button btnAll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +52,124 @@ public class SearchActivity extends AppCompatActivity {
 
         etSearch = findViewById(R.id.etSearch);
         btnSearch = findViewById(R.id.btnSearch);
+        btnAll = findViewById(R.id.btnAll);
+        btnGenre = findViewById(R.id.btnGenre);
+        btnYear = findViewById(R.id.btnYear);
+        btnRating = findViewById(R.id.btnRating);
         rvMovies = findViewById(R.id.rvMovies);
         rvMovies.setLayoutManager(new LinearLayoutManager(this));
         layoutEmpty = findViewById(R.id.layoutEmpty);
         layoutEmpty.setVisibility(View.VISIBLE);
         rvMovies.setVisibility(View.GONE);
+
+        BottomNavigationView bottomNav =
+                findViewById(R.id.bottomNavigation);
+
+        bottomNav.setSelectedItemId(R.id.menu_search);
+
+        bottomNav.setOnItemSelectedListener(item -> {
+
+            int id = item.getItemId();
+
+            if (id == R.id.menu_search) {
+                return true;
+            }
+
+            if (id == R.id.menu_home) {
+
+                startActivity(
+                        new Intent(SearchActivity.this,
+                                HomeActivity.class));
+
+                overridePendingTransition(0, 0);
+                finish();
+                return true;
+            }
+
+            if (id == R.id.menu_profile) {
+
+                startActivity(
+                        new Intent(SearchActivity.this,
+                                ProfileActivity.class));
+
+                overridePendingTransition(0, 0);
+                finish();
+                return true;
+            }
+
+            return false;
+        });
+
+        btnGenre.setOnClickListener(v -> {
+
+            PopupMenu popup = new PopupMenu(this, btnGenre);
+
+            popup.getMenu().add("Action");
+            popup.getMenu().add("Adventure");
+            popup.getMenu().add("Animation");
+            popup.getMenu().add("Comedy");
+            popup.getMenu().add("Drama");
+            popup.getMenu().add("Fantasy");
+            popup.getMenu().add("Horror");
+            popup.getMenu().add("Sci-Fi");
+
+            popup.setOnMenuItemClickListener(item -> {
+
+                btnGenre.setText(item.getTitle());
+
+                return true;
+            });
+
+            popup.show();
+        });
+
+        btnYear.setOnClickListener(v -> {
+
+            PopupMenu popup = new PopupMenu(this, btnYear);
+
+            popup.getMenu().add("2026");
+            popup.getMenu().add("2025");
+            popup.getMenu().add("2024");
+            popup.getMenu().add("2023");
+            popup.getMenu().add("2022");
+
+            popup.setOnMenuItemClickListener(item -> {
+
+                btnYear.setText(item.getTitle());
+
+                return true;
+            });
+
+            popup.show();
+        });
+
+        btnRating.setOnClickListener(v -> {
+
+            PopupMenu popup = new PopupMenu(this, btnRating);
+
+            popup.getMenu().add("⭐ 1+");
+            popup.getMenu().add("⭐ 2+");
+            popup.getMenu().add("⭐ 3+");
+            popup.getMenu().add("⭐ 4+");
+            popup.getMenu().add("⭐ 5");
+
+            popup.setOnMenuItemClickListener(item -> {
+
+                btnRating.setText(item.getTitle());
+
+                return true;
+            });
+
+            popup.show();
+        });
+
+        btnAll.setOnClickListener(v -> {
+
+            btnGenre.setText("Genre ▼");
+            btnYear.setText("Year ▼");
+            btnRating.setText("Rating ▼");
+
+        });
 
         btnSearch.setOnClickListener(v -> {
             String keyword = etSearch.getText().toString().trim();
