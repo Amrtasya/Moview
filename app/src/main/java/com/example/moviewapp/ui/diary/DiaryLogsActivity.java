@@ -1,4 +1,4 @@
-package com.example.moviewapp.ui;
+package com.example.moviewapp.ui.diary;
 
 import android.os.Bundle;
 import android.view.View;

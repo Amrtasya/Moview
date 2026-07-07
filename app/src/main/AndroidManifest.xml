@@ -35,7 +35,7 @@
             android:name=".ui.auth.SignUpActivity"
             android:theme="@style/Theme.MoviewApp.NoActionBar" />
         <activity
-            android:name=".ui.DiaryLogsActivity"
+            android:name=".ui.diary.DiaryLogsActivity"
             android:exported="false" />
     </application>
 
