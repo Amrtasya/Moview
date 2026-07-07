@@ -16,10 +16,35 @@ public class Movie {
 
     // Genre
     private List<Integer> genre_ids;
+    private List<Genre> genres;
+    private String overview;
+
+    private int runtime;
+
+    private String backdrop_path;
+    private String original_language;
+
+    public static class Genre {
+
+        private int id;
+        private String name;
+
+        public int getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
 
     // =====================
     // GETTER
     // =====================
+
+    public List<Genre> getGenres() {
+        return genres;
+    }
 
     public int getId() {
         return id;
@@ -45,6 +70,25 @@ public class Movie {
         return genre_ids;
     }
 
+    public String getOverview() {
+        return overview;
+    }
+
+    public int getRuntime() {
+        return runtime;
+    }
+
+    public String getBackdrop_path() {
+        return backdrop_path;
+    }
+
+    public String getBackdropUrl() {
+        return "https://image.tmdb.org/t/p/w780" + backdrop_path;
+    }
+    public String getOriginal_language() {
+        return original_language;
+    }
+
     // =====================
     // Helper
     // =====================
@@ -62,6 +106,12 @@ public class Movie {
 
     public String getGenreName() {
 
+        // Kalau dari endpoint Detail Movie
+        if (genres != null && !genres.isEmpty()) {
+            return genres.get(0).getName();
+        }
+
+        // Kalau dari Search Movie
         if (genre_ids == null || genre_ids.isEmpty()) {
             return "Movie";
         }
@@ -99,7 +149,7 @@ public class Movie {
                 return "Romance";
 
             case 878:
-                return "Sci-Fi";
+                return "Science Fiction";
 
             case 53:
                 return "Thriller";

@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.moviewapp.R;
 import com.example.moviewapp.model.Movie;
 import com.bumptech.glide.Glide;
+import com.example.moviewapp.ui.movie.MovieDetailActivity;
 
 import java.util.List;
 import android.util.Log;
@@ -59,6 +61,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
                 .placeholder(R.drawable.ic_launcher_background)
                 .error(R.drawable.ic_launcher_background)
                 .into(holder.imgPoster);
+
+        holder.itemView.setOnClickListener(v -> {
+
+            Intent intent =
+                    new Intent(holder.itemView.getContext(),
+                            MovieDetailActivity.class);
+
+            intent.putExtra("movie_id", movie.getId());
+
+            holder.itemView.getContext().startActivity(intent);
+
+        });
     }
 
     @Override

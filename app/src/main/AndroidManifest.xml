@@ -40,6 +40,8 @@
         <activity
             android:name=".ui.home.HomeActivity"
             android:exported="false"/>
+        <activity
+            android:name=".ui.movie.MovieDetailActivity"/>
     </application>
 
 </manifest>
