@@ -75,6 +75,14 @@ public class ProfileActivity extends AppCompatActivity {
         setupBottomNav();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refresh data setiap kali balik ke halaman ini (misal habis dari Edit Profile)
+        loadUserData();
+        loadUserStats();
+    }
+
     private void bindViews() {
         btnBack = findViewById(R.id.btnBack);
         ivProfilePhoto = findViewById(R.id.ivProfilePhoto);
@@ -111,14 +119,35 @@ public class ProfileActivity extends AppCompatActivity {
         showProfilePhoto(user.getProfileImage());
     }
 
+    /**
+     * Load foto profil dari path internal storage.
+     * Tint/padding di-clear dan scaleType diganti CENTER_CROP supaya foto asli
+     * tampil penuh & warnanya tidak ikut ke-tint hijau seperti icon default.
+     */
     private void showProfilePhoto(String path) {
-        if (TextUtils.isEmpty(path)) { setDefaultPhotoIcon(); return; }
+        if (TextUtils.isEmpty(path)) {
+            setDefaultPhotoIcon();
+            return;
+        }
         File file = new File(path);
-        if (!file.exists()) { setDefaultPhotoIcon(); return; }
-        ivProfilePhoto.setImageURI(Uri.fromFile(file));
+        if (!file.exists()) {
+            setDefaultPhotoIcon();
+            return;
+        }
+        try {
+            ivProfilePhoto.setImageTintList(null);
+            ivProfilePhoto.setPadding(0, 0, 0, 0);
+            ivProfilePhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            ivProfilePhoto.setImageURI(Uri.fromFile(file));
+        } catch (Exception e) {
+            setDefaultPhotoIcon();
+        }
     }
 
     private void setDefaultPhotoIcon() {
+        int pad = (int) (8 * getResources().getDisplayMetrics().density);
+        ivProfilePhoto.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        ivProfilePhoto.setPadding(pad, pad, pad, pad);
         ivProfilePhoto.setImageResource(R.drawable.outline_account_circle_50);
         ivProfilePhoto.setImageTintList(ColorStateList.valueOf(Color.parseColor("#00E5A8")));
     }
@@ -131,7 +160,11 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
         btnBack.setOnClickListener(v -> goToHome());
-        btnEditProfile.setOnClickListener(v -> Toast.makeText(this, "Edit Profile — coming soon", Toast.LENGTH_SHORT).show());
+
+        // FIX: sebelumnya cuma nampilin toast "coming soon", sekarang beneran buka EditProfileActivity
+        btnEditProfile.setOnClickListener(v ->
+                startActivity(new Intent(this, EditProfileActivity.class)));
+
         btnShare.setOnClickListener(v -> Toast.makeText(this, "Share — coming soon", Toast.LENGTH_SHORT).show());
         btnDiary.setOnClickListener(v -> startActivity(new Intent(this, DiaryLogsActivity.class)));
         btnWatchlist.setOnClickListener(v -> startActivity(new Intent(this, WatchlistActivity.class)));
