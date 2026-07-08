@@ -3,7 +3,6 @@ package com.example.moviewapp.ui.home;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.content.Context;
@@ -36,11 +35,15 @@ public class HomeActivity extends AppCompatActivity {
 
     private RecyclerView rvRecentMovies;
     private RecyclerView rvWatchlist;
-    private LinearLayout layoutEmptyWatchlist;
-    private ImageButton btnAddWatchlist;
     private TextView tvSeeAllWatchlist;
     private int currentUserId;
     private DiaryDao diaryDao;
+    private TextView tvSeeAllRecent;
+    private TextView tvAverageRating;
+    private TextView tvMoviesRated;
+    private TextView tvHighestRating;
+    private LinearLayout layoutStatistic;
+    private LinearLayout layoutEmptyStatistic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +61,13 @@ public class HomeActivity extends AppCompatActivity {
 
         rvWatchlist = findViewById(R.id.rvWatchlist);
 
-        layoutEmptyWatchlist =
-                findViewById(R.id.layoutEmptyWatchlist);
-
-        btnAddWatchlist =
-                findViewById(R.id.btnAddWatchlist);
         tvSeeAllWatchlist = findViewById(R.id.tvSeeAllWatchlist);
+        tvSeeAllRecent = findViewById(R.id.tvSeeAllRecent);
+        tvAverageRating = findViewById(R.id.tvAverageRating);
+        tvMoviesRated = findViewById(R.id.tvMoviesRated);
+        tvHighestRating = findViewById(R.id.tvHighestRating);
+        layoutStatistic = findViewById(R.id.layoutStatistic);
+        layoutEmptyStatistic = findViewById(R.id.layoutEmptyStatistic);
 
         // RecyclerView
         rvRecentMovies.setLayoutManager(
@@ -75,14 +79,15 @@ public class HomeActivity extends AppCompatActivity {
         );
 
         // Tombol tambah watchlist
-        btnAddWatchlist.setOnClickListener(v ->
-                startActivity(new Intent(HomeActivity.this,
-                        WatchlistActivity.class))
-        );
 
         tvSeeAllWatchlist.setOnClickListener(v ->
                 startActivity(new Intent(HomeActivity.this,
                         WatchlistActivity.class))
+        );
+
+        tvSeeAllRecent.setOnClickListener(v ->
+                startActivity(new Intent(HomeActivity.this,
+                        HistoryActivity.class))
         );
 
         // Bottom Navigation
@@ -134,20 +139,24 @@ public class HomeActivity extends AppCompatActivity {
 
             List<DiaryEntity> watched =
                     diaryDao.getDiaryByStatus(currentUserId, "WATCHED");
-            System.out.println("WATCHED SIZE = " + watched.size());
-
-            for (DiaryEntity d : watched) {
-                System.out.println(
-                        d.getTitle() + " | " + d.getWatchStatus()
-                );
-            }
 
             runOnUiThread(() -> {
 
-                HomeMovieAdapter adapter =
-                        new HomeMovieAdapter(watched);
+                LinearLayout layoutEmptyRecent = findViewById(R.id.layoutEmptyRecent);
 
-                rvRecentMovies.setAdapter(adapter);
+                if (watched == null || watched.isEmpty()) {
+
+                    rvRecentMovies.setVisibility(View.GONE);
+                    layoutEmptyRecent.setVisibility(View.VISIBLE);
+
+                } else {
+
+                    rvRecentMovies.setVisibility(View.VISIBLE);
+                    layoutEmptyRecent.setVisibility(View.GONE);
+
+                    HomeMovieAdapter adapter = new HomeMovieAdapter(watched);
+                    rvRecentMovies.setAdapter(adapter);
+                }
 
             });
 
@@ -161,6 +170,7 @@ public class HomeActivity extends AppCompatActivity {
 
         loadRecentMovies();
         loadWatchlist();
+        loadStatistic();
     }
     private void loadWatchlist() {
 
@@ -178,12 +188,10 @@ public class HomeActivity extends AppCompatActivity {
                 if (watchlist == null || watchlist.isEmpty()) {
 
                     rvWatchlist.setVisibility(View.GONE);
-                    layoutEmptyWatchlist.setVisibility(View.VISIBLE);
 
                 } else {
 
                     rvWatchlist.setVisibility(View.VISIBLE);
-                    layoutEmptyWatchlist.setVisibility(View.GONE);
 
                     HomeWatchlistAdapter adapter =
                             new HomeWatchlistAdapter(
@@ -193,6 +201,40 @@ public class HomeActivity extends AppCompatActivity {
 
                     rvWatchlist.setAdapter(adapter);
 
+                }
+
+            });
+
+        });
+
+        executor.shutdown();
+    }
+
+    private void loadStatistic() {
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        executor.execute(() -> {
+
+            float avg = diaryDao.getAvgRating(currentUserId);
+            int total = diaryDao.getTotalWatchedMovies(currentUserId);
+            float highest = diaryDao.getHighestRating(currentUserId);
+
+            runOnUiThread(() -> {
+
+                if (total == 0) {
+
+                    layoutStatistic.setVisibility(View.GONE);
+                    layoutEmptyStatistic.setVisibility(View.VISIBLE);
+
+                } else {
+
+                    layoutStatistic.setVisibility(View.VISIBLE);
+                    layoutEmptyStatistic.setVisibility(View.GONE);
+
+                    tvAverageRating.setText(String.format("⭐ %.1f", avg));
+                    tvMoviesRated.setText(String.valueOf(total));
+                    tvHighestRating.setText(String.format("%.1f", highest));
                 }
 
             });

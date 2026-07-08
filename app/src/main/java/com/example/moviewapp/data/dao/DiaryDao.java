@@ -63,4 +63,6 @@ public interface DiaryDao {
     // Rata-rata rating semua review user → angka "AVG. RATING"
     @Query("SELECT COALESCE(AVG(rating), 0.0) FROM diary WHERE userId = :userId AND rating > 0")
     float getAvgRating(int userId);
+    @Query("SELECT COALESCE(MAX(rating), 0.0) FROM diary WHERE userId = :userId AND watchStatus = 'WATCHED'")
+    float getHighestRating(int userId);
 }

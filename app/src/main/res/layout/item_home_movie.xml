@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="170dp"
+    android:layout_width="110dp"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="14dp"
+    android:layout_marginEnd="12dp"
     android:orientation="vertical">
 
     <ImageView
         android:id="@+id/imgPoster"
-        android:layout_width="170dp"
-        android:layout_height="240dp"
-        android:scaleType="centerCrop"
-        android:background="#1E1E1E"/>
+        android:layout_width="110dp"
+        android:layout_height="170dp"
+        android:background="#1E1E1E"
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/tvRating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="⭐ 4.8"
+        android:layout_marginTop="6dp"
+        android:text="★ 4.8"
         android:textColor="#00E5A8"
-        android:textStyle="bold"
-        android:textSize="12sp"
-        android:layout_marginTop="8dp"/>
+        android:textSize="11sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:maxLines="2"
         android:text="Movie Title"
         android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:maxLines="2"/>
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvYearGenre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="2024 • Action"
+        android:text="Action"
         android:textColor="#AAAAAA"
-        android:textSize="13sp"/>
+        android:textSize="11sp" />
 
 </LinearLayout>
