@@ -7,15 +7,14 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.moviewapp.R;
+import com.example.moviewapp.data.dao.DiaryDao;
 import com.example.moviewapp.data.dao.UserDao;
 import com.example.moviewapp.data.database.AppDatabase;
 import com.example.moviewapp.data.database.DatabaseClient;
@@ -28,18 +27,20 @@ import com.example.moviewapp.ui.diary.WatchlistActivity;
 import com.example.moviewapp.ui.diary.FavoriteActivity; // Import halaman Favorite kamu
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.Locale;
+
 public class ProfileActivity extends AppCompatActivity {
 
     private ImageView ivProfilePhoto;
     private TextView tvProfileName, tvUsername;
     private TextView tvMovieCount, tvThisYear, tvAvgRating;
     private Button btnEditProfile, btnShare;
-    private Button btnMovies, btnDiary, btnWatchlist, btnFavorite;
-    private Switch switchDarkMode;
+    private Button btnDiary, btnWatchlist, btnFavorite;
     private LinearLayout rowAppSettings, rowAbout, rowLogOut;
     private ImageButton btnBack;
 
     private UserDao userDao;
+    private DiaryDao diaryDao;
     private SharedPreferences sharedPreferences;
     private int currentUserId;
 
@@ -58,6 +59,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         AppDatabase db    = DatabaseClient.getInstance(this);
         userDao           = db.userDao();
+        diaryDao          = db.diaryDao();
         sharedPreferences = getSharedPreferences(LoginActivity.PREF_NAME, MODE_PRIVATE);
         currentUserId     = sharedPreferences.getInt(LoginActivity.KEY_USER_ID, -1);
 
@@ -68,8 +70,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         bindViews();
         loadUserData();
+        loadUserStats();
         setupClickListeners();
-        setupDarkModeSwitch();
         setupBottomNav();
     }
 
@@ -77,6 +79,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadUserData();
+        loadUserStats();
     }
 
     private void bindViews() {
@@ -89,11 +92,9 @@ public class ProfileActivity extends AppCompatActivity {
         tvAvgRating    = findViewById(R.id.tvAvgRating);
         btnEditProfile = findViewById(R.id.btnEditProfile);
         btnShare       = findViewById(R.id.btnShare);
-        btnMovies      = findViewById(R.id.btnMovies);
         btnDiary       = findViewById(R.id.btnDiary);
         btnWatchlist   = findViewById(R.id.btnWatchlist);
         btnFavorite    = findViewById(R.id.btnFavorite);
-        switchDarkMode = findViewById(R.id.switchDarkMode);
         rowAppSettings = findViewById(R.id.rowAppSettings);
         rowAbout       = findViewById(R.id.rowAbout);
         rowLogOut      = findViewById(R.id.rowLogOut);
@@ -105,6 +106,22 @@ public class ProfileActivity extends AppCompatActivity {
 
         tvProfileName.setText(user.getBio() != null ? user.getBio() : "No Name");
         tvUsername.setText("@" + user.getUsername());
+    }
+
+    /**
+     * Ambil 3 stats dari DiaryDao:
+     * - tvMovieCount -> total film berstatus WATCHED
+     * - tvThisYear   -> total film WATCHED yang watchDate-nya di tahun berjalan
+     * - tvAvgRating  -> rata-rata rating dari semua diary yang punya rating > 0
+     */
+    private void loadUserStats() {
+        int totalWatched   = diaryDao.getTotalWatchedMovies(currentUserId);
+        int watchedThisYear = diaryDao.getWatchedThisYear(currentUserId);
+        float avgRating     = diaryDao.getAvgRating(currentUserId);
+
+        tvMovieCount.setText(String.valueOf(totalWatched));
+        tvThisYear.setText(String.valueOf(watchedThisYear));
+        tvAvgRating.setText(String.format(Locale.getDefault(), "%.1f", avgRating));
     }
 
     private void setupClickListeners() {
@@ -121,9 +138,6 @@ public class ProfileActivity extends AppCompatActivity {
                     "Cek profil film " + name + " di Moview!");
             startActivity(Intent.createChooser(shareIntent, "Bagikan profil via"));
         });
-
-        btnMovies.setOnClickListener(v ->
-                Toast.makeText(this, "Movies — coming soon", Toast.LENGTH_SHORT).show());
 
         // Menuju ke halaman DiaryLogsActivity milik Rahma
         btnDiary.setOnClickListener(v -> {
@@ -152,19 +166,6 @@ public class ProfileActivity extends AppCompatActivity {
         rowLogOut.setOnClickListener(v -> showLogoutDialog());
     }
 
-    private void setupDarkModeSwitch() {
-        boolean isDark = sharedPreferences.getBoolean("dark_mode", true);
-        switchDarkMode.setChecked(isDark);
-
-        switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            sharedPreferences.edit().putBoolean("dark_mode", isChecked).apply();
-            AppCompatDelegate.setDefaultNightMode(
-                    isChecked ? AppCompatDelegate.MODE_NIGHT_YES
-                            : AppCompatDelegate.MODE_NIGHT_NO
-            );
-            recreate();
-        });
-    }
 
     private void setupBottomNav() {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
