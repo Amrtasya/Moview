@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.RatingBar;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +16,7 @@ import com.example.moviewapp.data.entity.DiaryEntity;
 
 import java.util.List;
 import java.util.Locale;
+
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
@@ -51,14 +53,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         holder.txtDate.setText(String.format(Locale.getDefault(), "📅 %s", movie.getWatchDate()));
 
         // Menampilkan bintang sesuai rating
-        int stars = (int) (movie.getRating() / 2);
-        String ratingDisplay = String.format(Locale.getDefault(), "%.1f", movie.getRating());
+        int fullStars = (int) movie.getRating();
 
-        StringBuilder starStr = new StringBuilder();
-        for (int i = 0; i < stars; i++) {
-            starStr.append("⭐");
+        StringBuilder stars = new StringBuilder();
+        for (int i = 0; i < fullStars; i++) {
+            stars.append("★");
         }
-        holder.txtRating.setText(String.format("%s %s", starStr.toString(), ratingDisplay));
+
+        holder.txtRating.setText(
+                stars + " " + String.format(Locale.getDefault(), "%.1f", movie.getRating())
+        );
 
         String posterUrl = "https://image.tmdb.org/t/p/w342" + movie.getPosterPath();
         Glide.with(holder.itemView.getContext())
@@ -80,16 +84,23 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+
         ImageView imgPoster;
-        TextView txtTitle, txtGenreYear, txtDate, txtRating;
+        TextView txtTitle;
+        TextView txtGenreYear;
+        TextView txtDate;
+        TextView txtRating;
+        RatingBar ratingBar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
             imgPoster = itemView.findViewById(R.id.imgPoster);
             txtTitle = itemView.findViewById(R.id.txtTitle);
             txtGenreYear = itemView.findViewById(R.id.txtGenreYear);
             txtDate = itemView.findViewById(R.id.txtDate);
-            txtRating = itemView.findViewById(R.id.txtRating);
+            txtRating = itemView.findViewById(R.id.tvRatingValue);
+            ratingBar = itemView.findViewById(R.id.ratingBar);
         }
     }
 }

@@ -2,11 +2,9 @@ package com.example.moviewapp.ui.home;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import android.widget.TextView;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,9 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moviewapp.R;
 import com.example.moviewapp.adapter.HomeMovieAdapter;
-import com.example.moviewapp.api.ApiService;
-import com.example.moviewapp.api.RetrofitClient;
-import com.example.moviewapp.model.MovieResponse;
 import com.example.moviewapp.ui.diary.HistoryActivity;
 import com.example.moviewapp.ui.movie.SearchActivity;
 import com.example.moviewapp.ui.profile.ProfileActivity;
@@ -28,11 +23,9 @@ import com.example.moviewapp.data.database.DatabaseClient;
 import com.example.moviewapp.data.entity.WatchlistEntity;
 import com.example.moviewapp.ui.auth.LoginActivity;
 import com.example.moviewapp.ui.diary.WatchlistActivity;
+import com.example.moviewapp.data.dao.DiaryDao;
+import com.example.moviewapp.data.entity.DiaryEntity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -47,6 +40,7 @@ public class HomeActivity extends AppCompatActivity {
     private ImageButton btnAddWatchlist;
     private TextView tvSeeAllWatchlist;
     private int currentUserId;
+    private DiaryDao diaryDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +51,9 @@ public class HomeActivity extends AppCompatActivity {
 
         currentUserId =
                 sharedPreferences.getInt(LoginActivity.KEY_USER_ID, -1);
+        diaryDao = DatabaseClient.getInstance(this).diaryDao();
 
-        // =========================
         // Bind View
-        // =========================
-
         rvRecentMovies = findViewById(R.id.rvRecentMovies);
 
         rvWatchlist = findViewById(R.id.rvWatchlist);
@@ -73,9 +65,7 @@ public class HomeActivity extends AppCompatActivity {
                 findViewById(R.id.btnAddWatchlist);
         tvSeeAllWatchlist = findViewById(R.id.tvSeeAllWatchlist);
 
-        // =========================
         // RecyclerView
-        // =========================
         rvRecentMovies.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         );
@@ -84,9 +74,7 @@ public class HomeActivity extends AppCompatActivity {
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         );
 
-        // =========================
         // Tombol tambah watchlist
-        // =========================
         btnAddWatchlist.setOnClickListener(v ->
                 startActivity(new Intent(HomeActivity.this,
                         WatchlistActivity.class))
@@ -97,9 +85,7 @@ public class HomeActivity extends AppCompatActivity {
                         WatchlistActivity.class))
         );
 
-        // =========================
         // Bottom Navigation
-        // =========================
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
         bottomNav.setSelectedItemId(R.id.menu_home);
 
@@ -135,40 +121,45 @@ public class HomeActivity extends AppCompatActivity {
             return false;
         });
 
-        // =========================
-        // Load API TMDB
-        // =========================
-        loadPopularMovies();
+        // Load Recent Movies & Watchlist
+        loadRecentMovies();
         loadWatchlist();
     }
 
-    private void loadPopularMovies() {
-        ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
+    private void loadRecentMovies() {
 
-        apiService.getPopularMovies("ce0282febe66aa78d512db45971aee56")
-                .enqueue(new Callback<MovieResponse>() {
-                    @Override
-                    public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            HomeMovieAdapter adapter = new HomeMovieAdapter(response.body().getResults());
-                            rvRecentMovies.setAdapter(adapter);
-                            Log.d("HOME", "Movie : " + response.body().getResults().size());
-                        } else {
-                            Toast.makeText(HomeActivity.this, "Gagal mengambil data", Toast.LENGTH_SHORT).show();
-                        }
-                    }
+        ExecutorService executor = Executors.newSingleThreadExecutor();
 
-                    @Override
-                    public void onFailure(Call<MovieResponse> call, Throwable t) {
-                        Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.e("HOME", t.getMessage());
-                    }
-                });
+        executor.execute(() -> {
+
+            List<DiaryEntity> watched =
+                    diaryDao.getDiaryByStatus(currentUserId, "WATCHED");
+            System.out.println("WATCHED SIZE = " + watched.size());
+
+            for (DiaryEntity d : watched) {
+                System.out.println(
+                        d.getTitle() + " | " + d.getWatchStatus()
+                );
+            }
+
+            runOnUiThread(() -> {
+
+                HomeMovieAdapter adapter =
+                        new HomeMovieAdapter(watched);
+
+                rvRecentMovies.setAdapter(adapter);
+
+            });
+
+        });
+
+        executor.shutdown();
     }
     @Override
     protected void onResume() {
         super.onResume();
 
+        loadRecentMovies();
         loadWatchlist();
     }
     private void loadWatchlist() {

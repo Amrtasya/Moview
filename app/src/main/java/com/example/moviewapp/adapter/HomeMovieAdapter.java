@@ -11,18 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.moviewapp.R;
-import com.example.moviewapp.model.Movie;
-
+import com.example.moviewapp.data.entity.DiaryEntity;
 import java.util.List;
 
 public class HomeMovieAdapter extends RecyclerView.Adapter<HomeMovieAdapter.ViewHolder> {
 
-    private final List<Movie> movieList;
-
-    public HomeMovieAdapter(List<Movie> movieList) {
+    private final List<DiaryEntity> movieList;
+    public HomeMovieAdapter(List<DiaryEntity> movieList) {
         this.movieList = movieList;
     }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -36,17 +33,17 @@ public class HomeMovieAdapter extends RecyclerView.Adapter<HomeMovieAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        Movie movie = movieList.get(position);
-
+        DiaryEntity movie = movieList.get(position);
         holder.tvTitle.setText(movie.getTitle());
 
-        holder.tvRating.setText("⭐ " +
-                String.format("%.1f", movie.getVote_average()));
+        holder.tvRating.setText(
+                "★ " + String.format("%.1f", movie.getRating())
+        );
 
-        holder.tvYearGenre.setText(movie.getYear());
+        holder.tvYearGenre.setText(movie.getGenre());
 
         Glide.with(holder.itemView.getContext())
-                .load(movie.getPosterUrl())
+                .load("https://image.tmdb.org/t/p/w342" + movie.getPosterPath())
                 .into(holder.imgPoster);
     }
 

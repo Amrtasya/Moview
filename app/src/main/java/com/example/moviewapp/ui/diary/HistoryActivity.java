@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.graphics.Color;
+import android.widget.EditText;
+import androidx.appcompat.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -108,12 +111,21 @@ public class HistoryActivity extends AppCompatActivity {
             });
             popup.show();
         });
+
+        SearchView svHistory = findViewById(R.id.svHistory);
+
+        EditText searchEditText =
+                svHistory.findViewById(androidx.appcompat.R.id.search_src_text);
+
+        searchEditText.setTextColor(Color.WHITE);
+        searchEditText.setHintTextColor(Color.GRAY);
     }
 
     private void filterData(String type, String value) {
         try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
             executor.execute(() -> {
-                List<DiaryEntity> all = diaryDao.getDiaryByUser(currentUserId);
+                List<DiaryEntity> all =
+                        diaryDao.getDiaryByStatus(currentUserId, "WATCHED");
                 List<DiaryEntity> filtered = new ArrayList<>();
                 for (DiaryEntity d : all) {
                     if (type.equals("rating") && d.getRating() >= Float.parseFloat(value)) filtered.add(d);
@@ -127,7 +139,8 @@ public class HistoryActivity extends AppCompatActivity {
     private void loadHistoryData() {
         try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
             executor.execute(() -> {
-                List<DiaryEntity> list = diaryDao.getDiaryByUser(currentUserId);
+                List<DiaryEntity> list =
+                        diaryDao.getDiaryByStatus(currentUserId, "WATCHED");
                 runOnUiThread(() -> displayData(list));
             });
         }
