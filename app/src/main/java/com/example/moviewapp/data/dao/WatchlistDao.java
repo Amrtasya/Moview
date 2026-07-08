@@ -23,4 +23,7 @@ public interface WatchlistDao {
 
     @Query("SELECT * FROM watchlist WHERE userId = :userId")
     List<WatchlistEntity> getWatchlistByUser(int userId);
+
+    @Query("DELETE FROM watchlist WHERE userId = :userId AND tmdbId = :tmdbId")
+    void deleteByMovieId(int userId, int tmdbId);
 }

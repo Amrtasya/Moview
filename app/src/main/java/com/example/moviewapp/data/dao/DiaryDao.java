@@ -13,39 +13,46 @@ import java.util.List;
 @Dao
 public interface DiaryDao {
 
-    // Create
+    // --- Operasi Dasar (CRUD) ---
     @Insert
     void insert(DiaryEntity diary);
 
-    // Update
     @Update
     void update(DiaryEntity diary);
 
-    // Delete
     @Delete
     void delete(DiaryEntity diary);
 
-    // Semua diary berdasarkan user
-    @Query("SELECT * FROM diary WHERE userId = :userId ORDER BY watchDate DESC")
-    List<DiaryEntity> getDiaryByUser(int userId);
+    @Query("DELETE FROM diary WHERE id = :id")
+    void deleteById(int id);
 
-    // Ambil semua diary
-    @Query("SELECT * FROM diary ORDER BY watchDate DESC")
-    List<DiaryEntity> getAllDiary();
+    // --- Query Data untuk UI ---
 
-    // Detail diary berdasarkan id
+    // Mengambil satu detail diary spesifik berdasarkan ID
     @Query("SELECT * FROM diary WHERE id = :id LIMIT 1")
     DiaryEntity getDiaryById(int id);
 
-    // Watchlist
-    @Query("SELECT * FROM diary WHERE userId = :userId AND watchStatus = 'WATCHLIST' ORDER BY watchDate DESC")
-    List<DiaryEntity> getWatchlist(int userId);
+    // [TAMBAHAN] Untuk cek apakah film sudah ada di diary (untuk logika Update/Insert)
+    @Query("SELECT * FROM diary WHERE userId = :userId AND tmdbId = :tmdbId LIMIT 1")
+    DiaryEntity getDiaryByTmdbId(int userId, int tmdbId);
 
-    // Favorite
+    // [TAMBAHAN] Untuk memfilter status (WATCHED atau WATCHLIST)
+    @Query("SELECT * FROM diary WHERE userId = :userId AND watchStatus = :status ORDER BY watchDate DESC")
+    List<DiaryEntity> getDiaryByStatus(int userId, String status);
+
+    // Mengambil semua catatan diary milik user tertentu
+    @Query("SELECT * FROM diary WHERE userId = :userId ORDER BY watchDate DESC")
+    List<DiaryEntity> getDiaryByUser(int userId);
+
+    // Mengambil semua diary tanpa filter user
+    @Query("SELECT * FROM diary ORDER BY watchDate DESC")
+    List<DiaryEntity> getAllDiary();
+
+    // Mengambil data untuk halaman Favorite
     @Query("SELECT * FROM diary WHERE userId = :userId AND isFavorite = 1 ORDER BY watchDate DESC")
     List<DiaryEntity> getFavoriteMovies(int userId);
 
-    // Hapus berdasarkan id
-    @Query("DELETE FROM diary WHERE id = :id")
-    void deleteById(int id);
+    // Tambahkan ini ke dalam DiaryDao.java
+    @Query("SELECT * FROM diary WHERE userId = :userId AND watchStatus = 'WATCHLIST' ORDER BY watchDate DESC")
+    List<DiaryEntity> getWatchlist(int userId);
 }

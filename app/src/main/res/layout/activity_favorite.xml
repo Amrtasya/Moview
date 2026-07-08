@@ -2,11 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://tools.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000">
 
+    <!-- Header Toolbar -->
     <LinearLayout
         android:id="@+id/layoutHeader"
         android:layout_width="match_parent"
@@ -21,20 +21,19 @@
             android:layout_height="24dp"
             android:src="@android:drawable/ic_media_previous"
             app:tint="#00E5A8"
-            android:contentDescription="@string/back"
-            android:clickable="true"
-            android:focusable="true"/>
+            android:contentDescription="Back" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="@string/watchlist"
+            android:text="Favorite"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>
 
+    <!-- Search Bar -->
     <LinearLayout
         android:id="@+id/layoutSearch"
         android:layout_width="match_parent"
@@ -51,24 +50,23 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@android:drawable/ic_menu_search"
-            app:tint="#9E9E9E"
-            android:contentDescription="@string/search_watchlist"/>
+            app:tint="#9E9E9E"/>
 
         <EditText
-            android:id="@+id/etSearchWatchlist"
+            android:id="@+id/etSearchFavorites"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginStart="10dp"
             android:background="@android:color/transparent"
-            android:hint="@string/search_watchlist"
+            android:hint="Search favorites..."
             android:textColorHint="#616161"
             android:textColor="#FFFFFF"
             android:textSize="15sp"
-            android:inputType="text"
-            android:importantForAutofill="no"/>
+            android:inputType="text"/>
     </LinearLayout>
 
+    <!-- Filter Chips -->
     <HorizontalScrollView
         android:id="@+id/scrollChips"
         android:layout_width="match_parent"
@@ -88,10 +86,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:text="@string/all_results"
+                android:text="All Results"
                 android:textColor="#FFFFFF"
                 app:chipBackgroundColor="#004D40"
                 android:checked="true"
+                android:layout_marginEnd="8dp"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:text="Rating ▼"
+                android:textColor="#FFFFFF"
+                app:chipBackgroundColor="#1A1A1E"
                 android:layout_marginEnd="8dp"/>
 
             <com.google.android.material.chip.Chip
@@ -99,7 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:text="@string/genre"
+                android:text="Genre ▼"
                 android:textColor="#FFFFFF"
                 app:chipBackgroundColor="#1A1A1E"
                 android:layout_marginEnd="8dp"/>
@@ -109,7 +117,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:text="@string/year"
+                android:text="Year ▼"
                 android:textColor="#FFFFFF"
                 app:chipBackgroundColor="#1A1A1E"/>
         </LinearLayout>
@@ -119,7 +127,7 @@
         android:id="@+id/txtSort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/sorted_by_date"
+        android:text="SORTED BY DATE"
         android:textColor="#4E4E54"
         android:textSize="11sp"
         android:textStyle="bold"
@@ -127,23 +135,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/scrollChips"/>
 
+    <!-- List Grid RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvWatchlist"
+        android:id="@+id/rvFavorite"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:paddingHorizontal="12dp"
         android:layout_marginTop="8dp"
-        android:clipToPadding="false"
-        android:paddingBottom="16dp"
         app:layout_constraintTop_toBottomOf="@id/txtSort"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
-        tools:listitem="@layout/item_movie"/>
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"/>
 
+    <!-- Status Kosong -->
     <TextView
         android:id="@+id/txtEmpty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/no_logs_found"
+        android:text="No favorite movies found"
         android:textColor="#616161"
         android:textSize="16sp"
         android:visibility="gone"
@@ -152,23 +159,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:contentDescription="@string/add_watchlist"
-        android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="#00E5A8"
-        app:tint="#000000"
-        app:fabSize="normal"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
-        app:layout_constraintEnd_toEndOf="parent" />
-
+    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#121212"
         app:itemIconTint="@color/bottom_nav_color"

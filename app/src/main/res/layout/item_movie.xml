@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -20,11 +19,12 @@
             android:id="@+id/imgPoster"
             android:layout_width="85dp"
             android:layout_height="125dp"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/desc_poster" />
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
             android:layout_marginStart="12dp">
@@ -32,7 +32,7 @@
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:maxLines="2"
                 android:ellipsize="end"
                 android:gravity="top"
@@ -47,21 +47,22 @@
                 android:textColor="#AAAAAA"
                 android:textSize="14sp"
                 android:layout_marginTop="4dp"
-                android:text="Sci-Fi • 2024"/>
+                android:text="@string/label_genre"/>
 
             <TextView
                 android:id="@+id/tvRating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="☆☆☆☆☆"
+                android:text="@string/default_char_count"
                 android:textColor="#00E5A8"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:layout_marginTop="2dp"/>
 
             <TextView
                 android:id="@+id/tvStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Not Rated Yet"
+                android:text="@string/label_watch_status"
                 android:textColor="#888888"
                 android:textSize="12sp"
                 android:layout_marginTop="4dp"/>

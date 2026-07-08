@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -12,34 +12,62 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MoviewApp">
-        <activity
-            android:name=".ui.movie.SearchActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.profile.EditProfileActivity"
-            android:theme="@style/Theme.MoviewApp.NoActionBar" />
-        <activity
-            android:name=".ui.profile.ProfileActivity"
-            android:theme="@style/Theme.MoviewApp.NoActionBar" />
+
         <activity
             android:name=".ui.auth.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.MoviewApp.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.auth.SignUpActivity"
-            android:theme="@style/Theme.MoviewApp.NoActionBar" />
+            android:theme="@style/Theme.MoviewApp.NoActionBar"/>
+
         <activity
-            android:name=".ui.DiaryLogsActivity"
-            android:exported="false" />
+            android:name=".ui.profile.ProfileActivity"
+            android:theme="@style/Theme.MoviewApp.NoActionBar"/>
+
+        <activity
+            android:name=".ui.profile.EditProfileActivity"
+            android:theme="@style/Theme.MoviewApp.NoActionBar"/>
+
         <activity
             android:name=".ui.home.HomeActivity"
             android:exported="false"/>
+
+        <activity
+            android:name=".ui.movie.SearchActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.movie.MovieDetailActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.diary.DiaryLogsActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.diary.WatchlistActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.diary.ReviewMovieActivity"
+            android:exported="false"/>
+
+        <!-- Tambahkan baris ini -->
+        <activity
+            android:name=".ui.diary.EditReviewActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.diary.FavoriteActivity"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

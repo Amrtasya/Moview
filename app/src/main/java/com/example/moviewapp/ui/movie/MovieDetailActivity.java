@@ -1,19 +1,20 @@
 package com.example.moviewapp.ui.movie;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.moviewapp.R;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
+import com.example.moviewapp.R;
 import com.example.moviewapp.api.ApiService;
 import com.example.moviewapp.api.RetrofitClient;
 import com.example.moviewapp.model.Movie;
+import com.example.moviewapp.ui.diary.ReviewMovieActivity; // Import halaman review Rahma
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -100,6 +101,23 @@ public class MovieDetailActivity extends AppCompatActivity {
                     Glide.with(MovieDetailActivity.this)
                             .load(movie.getBackdropUrl())
                             .into(imgBackdrop);
+
+                    // ===============================================================
+                    // LOGIKA KLIK: Hubungkan tombol review ke halaman milik Rahma
+                    // ===============================================================
+                    btnReview.setOnClickListener(v -> {
+                        Intent intent = new Intent(MovieDetailActivity.this, ReviewMovieActivity.class);
+
+                        // Kirim data film yang sukses diambil dari API TMDB ke halaman Rahma
+                        intent.putExtra("TMDB_ID", movie.getId());
+                        intent.putExtra("MOVIE_TITLE", movie.getTitle());
+                        intent.putExtra("POSTER_PATH", movie.getPoster_path());
+                        intent.putExtra("GENRE", movie.getGenreName());
+                        intent.putExtra("RELEASE_YEAR", movie.getYear());
+                        intent.putExtra("DIRECTOR", "TMDB Movie"); // Fallback default text jika model tidak menampung nama director
+
+                        startActivity(intent);
+                    });
 
                 } else {
 

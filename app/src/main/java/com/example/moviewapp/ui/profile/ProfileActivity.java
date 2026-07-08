@@ -23,6 +23,9 @@ import com.example.moviewapp.data.entity.UserEntity;
 import com.example.moviewapp.ui.auth.LoginActivity;
 import com.example.moviewapp.ui.home.HomeActivity;
 import com.example.moviewapp.ui.movie.SearchActivity;
+import com.example.moviewapp.ui.diary.DiaryLogsActivity;
+import com.example.moviewapp.ui.diary.WatchlistActivity;
+import com.example.moviewapp.ui.diary.FavoriteActivity; // Import halaman Favorite kamu
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -102,23 +105,14 @@ public class ProfileActivity extends AppCompatActivity {
 
         tvProfileName.setText(user.getBio() != null ? user.getBio() : "No Name");
         tvUsername.setText("@" + user.getUsername());
-
-        // Stats — sambung ke DiaryDao milik Rahma kalau sudah jadi
-        // tvMovieCount.setText(...);
-        // tvThisYear.setText(...);
-        // tvAvgRating.setText(...);
     }
 
     private void setupClickListeners() {
-
-        // Tombol back → HomeActivity
         btnBack.setOnClickListener(v -> goToHome());
 
-        // Edit Profile
         btnEditProfile.setOnClickListener(v ->
                 startActivity(new Intent(this, EditProfileActivity.class)));
 
-        // Share
         btnShare.setOnClickListener(v -> {
             String name = tvProfileName.getText().toString();
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -131,14 +125,23 @@ public class ProfileActivity extends AppCompatActivity {
         btnMovies.setOnClickListener(v ->
                 Toast.makeText(this, "Movies — coming soon", Toast.LENGTH_SHORT).show());
 
-        btnDiary.setOnClickListener(v ->
-                Toast.makeText(this, "Diary — coming soon", Toast.LENGTH_SHORT).show());
+        // Menuju ke halaman DiaryLogsActivity milik Rahma
+        btnDiary.setOnClickListener(v -> {
+            Intent intent = new Intent(this, DiaryLogsActivity.class);
+            startActivity(intent);
+        });
 
-        btnWatchlist.setOnClickListener(v ->
-                Toast.makeText(this, "Watchlist — coming soon", Toast.LENGTH_SHORT).show());
+        // Menuju ke halaman WatchlistActivity milik Rahma
+        btnWatchlist.setOnClickListener(v -> {
+            Intent intent = new Intent(this, WatchlistActivity.class);
+            startActivity(intent);
+        });
 
-        btnFavorite.setOnClickListener(v ->
-                Toast.makeText(this, "Favorite — coming soon", Toast.LENGTH_SHORT).show());
+        // Menuju ke halaman FavoriteActivity milik Rahma
+        btnFavorite.setOnClickListener(v -> {
+            Intent intent = new Intent(this, FavoriteActivity.class);
+            startActivity(intent);
+        });
 
         rowAppSettings.setOnClickListener(v ->
                 Toast.makeText(this, "Settings — coming soon", Toast.LENGTH_SHORT).show());
@@ -149,33 +152,20 @@ public class ProfileActivity extends AppCompatActivity {
         rowLogOut.setOnClickListener(v -> showLogoutDialog());
     }
 
-    // ---------------------------------------------------------------
-    // DARK MODE — fix: simpan dulu, baru recreate activity
-    // ---------------------------------------------------------------
     private void setupDarkModeSwitch() {
-        // Baca state dark mode yang tersimpan
         boolean isDark = sharedPreferences.getBoolean("dark_mode", true);
         switchDarkMode.setChecked(isDark);
 
         switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // 1. Simpan preferensi
             sharedPreferences.edit().putBoolean("dark_mode", isChecked).apply();
-
-            // 2. Terapkan tema baru
             AppCompatDelegate.setDefaultNightMode(
                     isChecked ? AppCompatDelegate.MODE_NIGHT_YES
                             : AppCompatDelegate.MODE_NIGHT_NO
             );
-
-            // 3. recreate() supaya activity ini langsung apply tema baru
-            //    tanpa harus tutup-buka app
             recreate();
         });
     }
 
-    // ---------------------------------------------------------------
-    // BOTTOM NAVIGATION
-    // ---------------------------------------------------------------
     private void setupBottomNav() {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
         bottomNav.setSelectedItemId(R.id.menu_profile);
@@ -205,9 +195,6 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    // ---------------------------------------------------------------
-    // HELPER: navigasi ke HomeActivity
-    // ---------------------------------------------------------------
     private void goToHome() {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -215,9 +202,6 @@ public class ProfileActivity extends AppCompatActivity {
         finish();
     }
 
-    // ---------------------------------------------------------------
-    // LOGOUT
-    // ---------------------------------------------------------------
     private void showLogoutDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Log Out")

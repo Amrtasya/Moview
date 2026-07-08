@@ -10,14 +10,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-
 import com.example.moviewapp.R;
 import com.example.moviewapp.api.ApiService;
 import com.example.moviewapp.api.RetrofitClient;
 import com.example.moviewapp.model.Movie;
 import com.example.moviewapp.model.MovieResponse;
 import com.example.moviewapp.adapter.MovieAdapter;
-
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,7 +30,6 @@ import android.content.Intent;
 import com.example.moviewapp.ui.home.HomeActivity;
 import com.example.moviewapp.ui.profile.ProfileActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -49,35 +46,16 @@ public class SearchActivity extends AppCompatActivity {
     private String selectedRating = "";
 
     private String getGenreId(String genre) {
-
         switch (genre) {
-
-            case "Action":
-                return "28";
-
-            case "Adventure":
-                return "12";
-
-            case "Animation":
-                return "16";
-
-            case "Comedy":
-                return "35";
-
-            case "Drama":
-                return "18";
-
-            case "Fantasy":
-                return "14";
-
-            case "Horror":
-                return "27";
-
-            case "Sci-Fi":
-                return "878";
-
-            default:
-                return "";
+            case "Action": return "28";
+            case "Adventure": return "12";
+            case "Animation": return "16";
+            case "Comedy": return "35";
+            case "Drama": return "18";
+            case "Fantasy": return "14";
+            case "Horror": return "27";
+            case "Sci-Fi": return "878";
+            default: return "";
         }
     }
 
@@ -98,13 +76,10 @@ public class SearchActivity extends AppCompatActivity {
         layoutEmpty.setVisibility(View.VISIBLE);
         rvMovies.setVisibility(View.GONE);
 
-        BottomNavigationView bottomNav =
-                findViewById(R.id.bottomNavigation);
-
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
         bottomNav.setSelectedItemId(R.id.menu_search);
 
         bottomNav.setOnItemSelectedListener(item -> {
-
             int id = item.getItemId();
 
             if (id == R.id.menu_search) {
@@ -112,22 +87,19 @@ public class SearchActivity extends AppCompatActivity {
             }
 
             if (id == R.id.menu_home) {
-
-                startActivity(
-                        new Intent(SearchActivity.this,
-                                HomeActivity.class));
-
+                startActivity(new Intent(SearchActivity.this, HomeActivity.class));
                 overridePendingTransition(0, 0);
                 finish();
                 return true;
             }
 
+            if (id == R.id.menu_history) {
+                Toast.makeText(SearchActivity.this, "History — coming soon", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
             if (id == R.id.menu_profile) {
-
-                startActivity(
-                        new Intent(SearchActivity.this,
-                                ProfileActivity.class));
-
+                startActivity(new Intent(SearchActivity.this, ProfileActivity.class));
                 overridePendingTransition(0, 0);
                 finish();
                 return true;
@@ -137,9 +109,7 @@ public class SearchActivity extends AppCompatActivity {
         });
 
         btnGenre.setOnClickListener(v -> {
-
             PopupMenu popup = new PopupMenu(this, btnGenre);
-
             popup.getMenu().add("Action");
             popup.getMenu().add("Adventure");
             popup.getMenu().add("Animation");
@@ -150,23 +120,16 @@ public class SearchActivity extends AppCompatActivity {
             popup.getMenu().add("Sci-Fi");
 
             popup.setOnMenuItemClickListener(item -> {
-
                 selectedGenre = item.getTitle().toString();
-
                 btnGenre.setText(selectedGenre);
-
                 loadFilteredMovies();
-
                 return true;
             });
-
             popup.show();
         });
 
         btnYear.setOnClickListener(v -> {
-
             PopupMenu popup = new PopupMenu(this, btnYear);
-
             popup.getMenu().add("2026");
             popup.getMenu().add("2025");
             popup.getMenu().add("2024");
@@ -174,22 +137,16 @@ public class SearchActivity extends AppCompatActivity {
             popup.getMenu().add("2022");
 
             popup.setOnMenuItemClickListener(item -> {
-
                 selectedYear = item.getTitle().toString();
-
                 btnYear.setText(selectedYear);
-
                 loadFilteredMovies();
                 return true;
             });
-
             popup.show();
         });
 
         btnRating.setOnClickListener(v -> {
-
             PopupMenu popup = new PopupMenu(this, btnRating);
-
             popup.getMenu().add("⭐ 1+");
             popup.getMenu().add("⭐ 2+");
             popup.getMenu().add("⭐ 3+");
@@ -197,44 +154,24 @@ public class SearchActivity extends AppCompatActivity {
             popup.getMenu().add("⭐ 5");
 
             popup.setOnMenuItemClickListener(item -> {
-
                 String ratingText = item.getTitle().toString();
-
                 btnRating.setText(ratingText);
 
                 switch (ratingText) {
-
-                    case "⭐ 1+":
-                        selectedRating = "2";
-                        break;
-
-                    case "⭐ 2+":
-                        selectedRating = "4";
-                        break;
-
-                    case "⭐ 3+":
-                        selectedRating = "6";
-                        break;
-
-                    case "⭐ 4+":
-                        selectedRating = "8";
-                        break;
-
-                    case "⭐ 5":
-                        selectedRating = "9";
-                        break;
+                    case "⭐ 1+": selectedRating = "2"; break;
+                    case "⭐ 2+": selectedRating = "4"; break;
+                    case "⭐ 3+": selectedRating = "6"; break;
+                    case "⭐ 4+": selectedRating = "8"; break;
+                    case "⭐ 5": selectedRating = "9"; break;
                 }
 
                 loadFilteredMovies();
-
                 return true;
             });
-
             popup.show();
         });
 
         btnAll.setOnClickListener(v -> {
-
             selectedGenre = "";
             selectedYear = "";
             selectedRating = "";
@@ -250,56 +187,38 @@ public class SearchActivity extends AppCompatActivity {
             String keyword = etSearch.getText().toString().trim();
 
             if (!keyword.isEmpty()) {
+                ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
 
-                ApiService apiService =
-                        RetrofitClient.getClient().create(ApiService.class);
+                apiService.searchMovies("ce0282febe66aa78d512db45971aee56", keyword)
+                        .enqueue(new Callback<MovieResponse>() {
+                            @Override
+                            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+                                if (response.body() != null && response.body().getResults().isEmpty()) {
+                                    layoutEmpty.setVisibility(View.VISIBLE);
+                                    rvMovies.setVisibility(View.GONE);
+                                } else if (response.body() != null) {
+                                    layoutEmpty.setVisibility(View.GONE);
+                                    rvMovies.setVisibility(View.VISIBLE);
 
-                apiService.searchMovies(
-                        "ce0282febe66aa78d512db45971aee56",
-                        keyword
-                ).enqueue(new Callback<MovieResponse>() {
+                                    MovieAdapter adapter = new MovieAdapter(response.body().getResults());
+                                    rvMovies.setAdapter(adapter);
 
-                    @Override
-                    public void onResponse(Call<MovieResponse> call,
-                                           Response<MovieResponse> response) {
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }
 
-                        if (response.body().getResults().isEmpty()) {
-
-                            layoutEmpty.setVisibility(View.VISIBLE);
-                            rvMovies.setVisibility(View.GONE);
-
-                        } else {
-
-                            layoutEmpty.setVisibility(View.GONE);
-                            rvMovies.setVisibility(View.VISIBLE);
-
-                            MovieAdapter adapter =
-                                    new MovieAdapter(response.body().getResults());
-
-                            rvMovies.setAdapter(adapter);
-
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<MovieResponse> call,
-                                          Throwable t) {
-
-                        Toast.makeText(SearchActivity.this,
-                                t.getMessage(),
-                                Toast.LENGTH_SHORT).show();
-
-                        Log.e("TMDB", t.getMessage());
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<MovieResponse> call, Throwable t) {
+                                Toast.makeText(SearchActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                Log.e("TMDB", t.getMessage());
+                            }
+                        });
             }
         });
-
     }
-    private void loadFilteredMovies() {
 
-        ApiService apiService =
-                RetrofitClient.getClient().create(ApiService.class);
+    private void loadFilteredMovies() {
+        ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
 
         apiService.discoverMovies(
                 "ce0282febe66aa78d512db45971aee56",
@@ -307,34 +226,22 @@ public class SearchActivity extends AppCompatActivity {
                 selectedYear,
                 selectedRating
         ).enqueue(new Callback<MovieResponse>() {
-
             @Override
-            public void onResponse(Call<MovieResponse> call,
-                                   Response<MovieResponse> response) {
-
-                if (response.isSuccessful()
-                        && response.body() != null) {
-
-                    MovieAdapter adapter =
-                            new MovieAdapter(
-                                    response.body().getResults());
-
+            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    MovieAdapter adapter = new MovieAdapter(response.body().getResults());
                     rvMovies.setAdapter(adapter);
 
                     layoutEmpty.setVisibility(View.GONE);
                     rvMovies.setVisibility(View.VISIBLE);
+
+                    adapter.notifyDataSetChanged();
                 }
             }
 
             @Override
-            public void onFailure(Call<MovieResponse> call,
-                                  Throwable t) {
-
-                Toast.makeText(
-                        SearchActivity.this,
-                        t.getMessage(),
-                        Toast.LENGTH_SHORT
-                ).show();
+            public void onFailure(Call<MovieResponse> call, Throwable t) {
+                Toast.makeText(SearchActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

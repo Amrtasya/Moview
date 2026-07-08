@@ -3,42 +3,50 @@
 
     <string name="app_name">Moview App</string>
 
+    <!-- Navigasi & Umum -->
+    <string name="back">Back</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+
+    <!-- Halaman Diary Logs -->
     <string name="diary">Diary</string>
     <string name="diary_logs">Diary Logs</string>
     <string name="sorted_by_date">SORTED BY DATE</string>
     <string name="no_logs_found">No logs found</string>
 
+    <!-- Filter Chips -->
     <string name="all_results">All Results</string>
     <string name="rating">Rating ▼</string>
     <string name="genre">Genre ▼</string>
     <string name="year">Year ▼</string>
 
-    <string name="back">Back</string>
-
-    <string name="login">Login</string>
-    <string name="email">Email</string>
-    <string name="password">Password</string>
-
+    <!-- Halaman Review Movie (Versi Bersih Tanpa Duplikat) -->
     <string name="title_review_movie">Review Movie</string>
+    <string name="desc_back">BackButton</string>
+    <string name="desc_poster">Movie Poster</string>
+    <string name="desc_favorite">Favorite Toggle</string>
     <string name="label_director">DIRECTOR</string>
-    <string name="label_genre_tag">🎬 GENRE</string>
-    <string name="label_release_tag">📅 RELEASE</string>
+    <string name="label_genre">🎬 GENRE</string>
+    <string name="label_release">📅 RELEASE</string>
 
-    <string name="section_watching_experience">🔄 WATCHING EXPERIENCE</string>
-    <string name="label_watch_status_upper">WATCH STATUS</string>
-    <string name="status_watched_check">✓ Watched</string>
-    <string name="status_watchlist_circle">○ Watchlist</string>
+    <string name="title_watching_experience">🕒 WATCHING EXPERIENCE</string>
+    <string name="label_watch_status">WATCH STATUS</string>
+    <string name="status_watched">✓ Watched</string>
+    <string name="status_watchlist">○ Watchlist</string>
 
-    <string name="label_watch_date_upper">WATCH DATE</string>
-    <string name="label_your_rating_upper">YOUR RATING</string>
+    <string name="label_watch_date">WATCH DATE</string>
+    <string name="hint_watch_date">Select date</string>
+    <string name="label_your_rating">YOUR RATING</string>
 
-    <string name="section_personal_review">💬 PERSONAL REVIEW</string>
-    <string name="hint_review_premium">How was the cinematography? What did you feel about the ending…</string>
-    <string name="info_history_only">Reviews are saved to your history only.</string>
-    <string name="text_counter_default">0/500</string>
+    <string name="title_personal_review">💬 PERSONAL REVIEW</string>
+    <string name="hint_personal_review">How was the cinematography? What did you feel about the ending...</string>
+    <string name="info_review_save">Reviews are saved to your history only.</string>
+    <string name="default_char_count">0/500</string>
     <string name="btn_save_experience">💾 SAVE EXPERIENCE</string>
     <string name="btn_discard_changes">Discard Changes</string>
 
+    <!-- Halaman Watchlist -->
     <string name="watchlist">Watchlist</string>
     <string name="search_watchlist">Search watchlist...</string>
     <string name="add_watchlist">Add Watchlist</string>

@@ -18,6 +18,9 @@ public interface FavoriteDao {
     @Delete
     void delete(FavoriteEntity movie);
 
+    @Query("DELETE FROM favorite WHERE userId = :userId AND tmdbId = :tmdbId")
+    void deleteByTmdbId(int userId, int tmdbId);
+
     @Query("SELECT * FROM favorite")
     List<FavoriteEntity> getAllFavorites();
 
