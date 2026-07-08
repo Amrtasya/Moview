@@ -51,6 +51,8 @@ public class ProfileActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private int currentUserId;
 
+    private UserEntity currentUser; // simpan user yang lagi login, dipakai juga untuk share
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,11 +114,11 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void loadUserData() {
-        UserEntity user = userDao.getUserById(currentUserId);
-        if (user == null) return;
-        tvProfileName.setText(user.getBio() != null ? user.getBio() : "No Name");
-        tvUsername.setText("@" + user.getUsername());
-        showProfilePhoto(user.getProfileImage());
+        currentUser = userDao.getUserById(currentUserId);
+        if (currentUser == null) return;
+        tvProfileName.setText(currentUser.getBio() != null ? currentUser.getBio() : "No Name");
+        tvUsername.setText("@" + currentUser.getUsername());
+        showProfilePhoto(currentUser.getProfileImage());
     }
 
     /**
@@ -165,11 +167,24 @@ public class ProfileActivity extends AppCompatActivity {
         btnEditProfile.setOnClickListener(v ->
                 startActivity(new Intent(this, EditProfileActivity.class)));
 
-        btnShare.setOnClickListener(v -> Toast.makeText(this, "Share — coming soon", Toast.LENGTH_SHORT).show());
+        // FIX: sebelumnya cuma toast "coming soon", sekarang beneran munculin native share sheet
+        btnShare.setOnClickListener(v -> shareProfile());
+
         btnDiary.setOnClickListener(v -> startActivity(new Intent(this, DiaryLogsActivity.class)));
         btnWatchlist.setOnClickListener(v -> startActivity(new Intent(this, WatchlistActivity.class)));
         btnFavorite.setOnClickListener(v -> startActivity(new Intent(this, FavoriteActivity.class)));
         rowLogOut.setOnClickListener(v -> showLogoutDialog());
+    }
+
+    private void shareProfile() {
+        String username = (currentUser != null) ? currentUser.getUsername() : "user";
+        String shareText = "Cek profil film " + username + " di Moview!";
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+
+        startActivity(Intent.createChooser(shareIntent, "Sharing text"));
     }
 
     private void setupBottomNav() {
