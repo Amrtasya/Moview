@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.widget.TextView;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,11 +22,21 @@ import com.example.moviewapp.api.RetrofitClient;
 import com.example.moviewapp.model.MovieResponse;
 import com.example.moviewapp.ui.movie.SearchActivity;
 import com.example.moviewapp.ui.profile.ProfileActivity;
+import com.example.moviewapp.adapter.HomeWatchlistAdapter;
+import com.example.moviewapp.data.database.DatabaseClient;
+import com.example.moviewapp.data.entity.WatchlistEntity;
+import com.example.moviewapp.ui.auth.LoginActivity;
+import com.example.moviewapp.ui.diary.WatchlistActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -31,19 +44,33 @@ public class HomeActivity extends AppCompatActivity {
     private RecyclerView rvWatchlist;
     private LinearLayout layoutEmptyWatchlist;
     private ImageButton btnAddWatchlist;
+    private TextView tvSeeAllWatchlist;
+    private int currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(LoginActivity.PREF_NAME, Context.MODE_PRIVATE);
+
+        currentUserId =
+                sharedPreferences.getInt(LoginActivity.KEY_USER_ID, -1);
 
         // =========================
         // Bind View
         // =========================
+
         rvRecentMovies = findViewById(R.id.rvRecentMovies);
+
         rvWatchlist = findViewById(R.id.rvWatchlist);
-        layoutEmptyWatchlist = findViewById(R.id.layoutEmptyWatchlist);
-        btnAddWatchlist = findViewById(R.id.btnAddWatchlist);
+
+        layoutEmptyWatchlist =
+                findViewById(R.id.layoutEmptyWatchlist);
+
+        btnAddWatchlist =
+                findViewById(R.id.btnAddWatchlist);
+        tvSeeAllWatchlist = findViewById(R.id.tvSeeAllWatchlist);
 
         // =========================
         // RecyclerView
@@ -57,16 +84,16 @@ public class HomeActivity extends AppCompatActivity {
         );
 
         // =========================
-        // Watchlist masih kosong
-        // =========================
-        rvWatchlist.setVisibility(View.GONE);
-        layoutEmptyWatchlist.setVisibility(View.VISIBLE);
-
-        // =========================
         // Tombol tambah watchlist
         // =========================
         btnAddWatchlist.setOnClickListener(v ->
-                startActivity(new Intent(HomeActivity.this, SearchActivity.class))
+                startActivity(new Intent(HomeActivity.this,
+                        WatchlistActivity.class))
+        );
+
+        tvSeeAllWatchlist.setOnClickListener(v ->
+                startActivity(new Intent(HomeActivity.this,
+                        WatchlistActivity.class))
         );
 
         // =========================
@@ -109,6 +136,7 @@ public class HomeActivity extends AppCompatActivity {
         // Load API TMDB
         // =========================
         loadPopularMovies();
+        loadWatchlist();
     }
 
     private void loadPopularMovies() {
@@ -133,5 +161,50 @@ public class HomeActivity extends AppCompatActivity {
                         Log.e("HOME", t.getMessage());
                     }
                 });
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        loadWatchlist();
+    }
+    private void loadWatchlist() {
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        executor.execute(() -> {
+
+            List<WatchlistEntity> watchlist =
+                    DatabaseClient.getInstance(HomeActivity.this)
+                            .watchlistDao()
+                            .getWatchlistByUser(currentUserId);
+
+            runOnUiThread(() -> {
+
+                if (watchlist == null || watchlist.isEmpty()) {
+
+                    rvWatchlist.setVisibility(View.GONE);
+                    layoutEmptyWatchlist.setVisibility(View.VISIBLE);
+
+                } else {
+
+                    rvWatchlist.setVisibility(View.VISIBLE);
+                    layoutEmptyWatchlist.setVisibility(View.GONE);
+
+                    HomeWatchlistAdapter adapter =
+                            new HomeWatchlistAdapter(
+                                    HomeActivity.this,
+                                    watchlist
+                            );
+
+                    rvWatchlist.setAdapter(adapter);
+
+                }
+
+            });
+
+        });
+
+        executor.shutdown();
     }
 }
