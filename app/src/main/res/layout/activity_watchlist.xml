@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:background="#000000">
 
+    <!-- Header -->
     <LinearLayout
         android:id="@+id/layoutHeader"
         android:layout_width="match_parent"
@@ -35,6 +36,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <!-- Search Bar -->
     <LinearLayout
         android:id="@+id/layoutSearch"
         android:layout_width="match_parent"
@@ -69,7 +71,7 @@
             android:importantForAutofill="no"/>
     </LinearLayout>
 
-    <!-- Chips (Hanya All dan Genre) -->
+    <!-- Chips -->
     <LinearLayout
         android:id="@+id/layoutChips"
         android:layout_width="match_parent"
@@ -112,7 +114,6 @@
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
         tools:listitem="@layout/item_movie"/>
 
-    <!-- Placeholder data kosong -->
     <TextView
         android:id="@+id/txtEmpty"
         android:layout_width="wrap_content"
@@ -138,12 +139,17 @@
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Bottom Navigation yang sudah disamakan -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#121212"
+        app:itemIconTint="@color/bottom_nav_color"
+        app:itemTextColor="@color/bottom_nav_color"
         app:menu="@menu/bottom_nav_menu"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

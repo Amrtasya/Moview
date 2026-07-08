@@ -1,112 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#121212">
 
-    <!-- Header -->
-    <TextView
-        android:id="@+id/tvHeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="Movies"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
-    <!-- Search Bar -->
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/svHistory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvHeader"
-        android:layout_marginHorizontal="16dp"
-        android:background="@drawable/bg_search_bar"
-        app:queryHint="Search history..."
-        app:iconifiedByDefault="false" />
-
-    <!-- Filter Chips -->
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chipGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/svHistory"
-        android:layout_margin="16dp"
-        app:singleLine="true">
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipAll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="All Results"
-            app:chipBackgroundColor="#1DB954"
-            android:textColor="#FFFFFF"/>
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rating ▼" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipGenre"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Genre ▼" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipYear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Year ▼" />
-    </com.google.android.material.chip.ChipGroup>
-
-    <!-- Stats -->
     <LinearLayout
-        android:id="@+id/llStats"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/chipGroup"
-        android:paddingHorizontal="16dp"
-        android:weightSum="2">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_media_previous"
+                app:tint="@android:color/white" />
+
+            <TextView
+                android:id="@+id/txtTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Movies"
+                android:textColor="@android:color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#2B2B2B" />
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/svHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/bg_button_dark"
+            app:queryHint="Search history..."
+            app:iconifiedByDefault="false" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:scrollbars="none">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleLine="true"
+                app:singleSelection="false">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_marginEnd="8dp"
+                    android:text="All Results"
+                    android:textColor="@android:color/white"
+                    app:chipBackgroundColor="#0BA360"
+                    app:chipCornerRadius="18dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_marginEnd="8dp"
+                    android:text="Rating ▼"
+                    android:textColor="@android:color/white"
+                    app:chipBackgroundColor="#202020"
+                    app:chipCornerRadius="18dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipGenre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_marginEnd="8dp"
+                    android:text="Genre ▼"
+                    android:textColor="@android:color/white"
+                    app:chipBackgroundColor="#202020"
+                    app:chipCornerRadius="18dp" />
+            </com.google.android.material.chip.ChipGroup>
+        </HorizontalScrollView>
 
         <TextView
-            android:id="@+id/tvEntryCount"
-            android:layout_width="0dp"
+            android:id="@+id/txtSort"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="ENTRY COUNT: 0"
-            android:textColor="#FFFFFF" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
+            android:layout_gravity="end"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="8dp"
             android:text="SORTED BY DATE"
-            android:textColor="#808080" />
+            android:textColor="#8F8F8F"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvHistory"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp" />
     </LinearLayout>
 
-    <!-- List -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvHistory"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/llStats"
-        android:layout_above="@id/bottomNavigation"
-        android:layout_marginTop="8dp" />
-
-    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:background="#121212"
         app:itemIconTint="@color/bottom_nav_color"
         app:itemTextColor="@color/bottom_nav_color"
-        app:menu="@menu/bottom_nav_menu" />
+        app:menu="@menu/bottom_nav_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

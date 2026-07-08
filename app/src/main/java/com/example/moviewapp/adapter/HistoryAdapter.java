@@ -19,9 +19,15 @@ import java.util.Locale;
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
     private final List<DiaryEntity> historyList;
+    private final OnItemClickListener listener;
 
-    public HistoryAdapter(List<DiaryEntity> historyList) {
+    public interface OnItemClickListener {
+        void onItemClick(DiaryEntity diary);
+    }
+
+    public HistoryAdapter(List<DiaryEntity> historyList, OnItemClickListener listener) {
         this.historyList = historyList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -37,10 +43,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
         holder.txtTitle.setText(movie.getTitle());
 
-        // Menggunakan data yang tersedia di DiaryEntity
-        // Menampilkan Director sebagai ganti Genre/Year agar tidak error
-        String subTitle = (movie.getDirector() != null && !movie.getDirector().isEmpty())
-                ? movie.getDirector() : "No Director Info";
+        // Menggunakan genre jika tersedia, jika tidak tampilkan director
+        String subTitle = (movie.getGenre() != null && !movie.getGenre().isEmpty())
+                ? movie.getGenre() : (movie.getDirector() != null ? movie.getDirector() : "No Info");
         holder.txtGenreYear.setText(subTitle);
 
         holder.txtDate.setText(String.format(Locale.getDefault(), "📅 %s", movie.getWatchDate()));
@@ -61,6 +66,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.stat_notify_error)
                 .into(holder.imgPoster);
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(movie);
+            }
+        });
     }
 
     @Override

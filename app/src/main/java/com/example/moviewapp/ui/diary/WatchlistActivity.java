@@ -41,7 +41,7 @@ public class WatchlistActivity extends AppCompatActivity {
     private FloatingActionButton fabAdd;
     private EditText etSearch;
     private TextView txtEmpty;
-    private Chip chipAll, chipGenre; // chipYear dihapus
+    private Chip chipAll, chipGenre;
 
     private WatchlistAdapter adapter;
     private List<WatchlistEntity> allWatchlistList = new ArrayList<>();
@@ -84,7 +84,6 @@ public class WatchlistActivity extends AppCompatActivity {
         txtEmpty = findViewById(R.id.txtEmpty);
         chipAll = findViewById(R.id.chipAll);
         chipGenre = findViewById(R.id.chipGenre);
-        // chipYear dihapus
 
         rvWatchlist.setLayoutManager(new GridLayoutManager(this, 2));
     }
@@ -152,25 +151,25 @@ public class WatchlistActivity extends AppCompatActivity {
 
     private void setupBottomNav() {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
-        bottomNav.setSelectedItemId(R.id.menu_profile);
+        bottomNav.setSelectedItemId(R.id.menu_history); // Sesuaikan agar sesuai saat halaman dibuka
+
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
-            if (id == R.id.menu_profile) {
-                startActivity(new Intent(this, ProfileActivity.class));
+            if (item.isChecked()) return false;
+
+            Intent intent = null;
+            if (id == R.id.menu_home) intent = new Intent(this, HomeActivity.class);
+            else if (id == R.id.menu_search) intent = new Intent(this, SearchActivity.class);
+            else if (id == R.id.menu_history) intent = new Intent(this, HistoryActivity.class);
+            else if (id == R.id.menu_profile) intent = new Intent(this, ProfileActivity.class);
+
+            if (intent != null) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
                 finish();
-                return true;
             }
-            if (id == R.id.menu_home) {
-                startActivity(new Intent(this, HomeActivity.class));
-                finish();
-                return true;
-            }
-            if (id == R.id.menu_search) {
-                startActivity(new Intent(this, SearchActivity.class));
-                finish();
-                return true;
-            }
-            return false;
+            return true;
         });
     }
 }

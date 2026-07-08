@@ -27,11 +27,12 @@ import com.example.moviewapp.data.database.AppDatabase;
 import com.example.moviewapp.data.database.DatabaseClient;
 import com.example.moviewapp.data.entity.UserEntity;
 import com.example.moviewapp.ui.auth.LoginActivity;
+import com.example.moviewapp.ui.diary.DiaryLogsActivity;
+import com.example.moviewapp.ui.diary.FavoriteActivity;
+import com.example.moviewapp.ui.diary.HistoryActivity;
+import com.example.moviewapp.ui.diary.WatchlistActivity;
 import com.example.moviewapp.ui.home.HomeActivity;
 import com.example.moviewapp.ui.movie.SearchActivity;
-import com.example.moviewapp.ui.diary.DiaryLogsActivity;
-import com.example.moviewapp.ui.diary.WatchlistActivity;
-import com.example.moviewapp.ui.diary.FavoriteActivity; // Import halaman Favorite kamu
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
@@ -40,10 +41,8 @@ import java.util.Locale;
 public class ProfileActivity extends AppCompatActivity {
 
     private ImageView ivProfilePhoto;
-    private TextView tvProfileName, tvUsername;
-    private TextView tvMovieCount, tvThisYear, tvAvgRating;
-    private Button btnEditProfile, btnShare;
-    private Button btnDiary, btnWatchlist, btnFavorite;
+    private TextView tvProfileName, tvUsername, tvMovieCount, tvThisYear, tvAvgRating;
+    private Button btnEditProfile, btnShare, btnDiary, btnWatchlist, btnFavorite;
     private LinearLayout rowAppSettings, rowAbout, rowLogOut;
     private ImageButton btnBack;
 
@@ -57,19 +56,11 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        getOnBackPressedDispatcher().addCallback(this,
-                new androidx.activity.OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
-                        goToHome();
-                    }
-                });
-
-        AppDatabase db    = DatabaseClient.getInstance(this);
-        userDao           = db.userDao();
-        diaryDao          = db.diaryDao();
+        AppDatabase db = DatabaseClient.getInstance(this);
+        userDao = db.userDao();
+        diaryDao = db.diaryDao();
         sharedPreferences = getSharedPreferences(LoginActivity.PREF_NAME, MODE_PRIVATE);
-        currentUserId     = sharedPreferences.getInt(LoginActivity.KEY_USER_ID, -1);
+        currentUserId = sharedPreferences.getInt(LoginActivity.KEY_USER_ID, -1);
 
         if (currentUserId == -1) {
             goToLogin();
@@ -81,40 +72,27 @@ public class ProfileActivity extends AppCompatActivity {
         loadUserData();
         loadUserStats();
         setupClickListeners();
-        setupDarkModeSwitch();
         setupBottomNav();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadUserData();
-        loadUserStats();
-    }
-
     private void bindViews() {
-        btnBack        = findViewById(R.id.btnBack);
+        btnBack = findViewById(R.id.btnBack);
         ivProfilePhoto = findViewById(R.id.ivProfilePhoto);
-        tvProfileName  = findViewById(R.id.tvProfileName);
-        tvUsername     = findViewById(R.id.tvUsername);
-        tvMovieCount   = findViewById(R.id.tvMovieCount);
-        tvThisYear     = findViewById(R.id.tvThisYear);
-        tvAvgRating    = findViewById(R.id.tvAvgRating);
+        tvProfileName = findViewById(R.id.tvProfileName);
+        tvUsername = findViewById(R.id.tvUsername);
+        tvMovieCount = findViewById(R.id.tvMovieCount);
+        tvThisYear = findViewById(R.id.tvThisYear);
+        tvAvgRating = findViewById(R.id.tvAvgRating);
         btnEditProfile = findViewById(R.id.btnEditProfile);
-        btnShare       = findViewById(R.id.btnShare);
-        btnDiary       = findViewById(R.id.btnDiary);
-        btnWatchlist   = findViewById(R.id.btnWatchlist);
-        btnFavorite    = findViewById(R.id.btnFavorite);
+        btnShare = findViewById(R.id.btnShare);
+        btnDiary = findViewById(R.id.btnDiary);
+        btnWatchlist = findViewById(R.id.btnWatchlist);
+        btnFavorite = findViewById(R.id.btnFavorite);
         rowAppSettings = findViewById(R.id.rowAppSettings);
-        rowAbout       = findViewById(R.id.rowAbout);
-        rowLogOut      = findViewById(R.id.rowLogOut);
+        rowAbout = findViewById(R.id.rowAbout);
+        rowLogOut = findViewById(R.id.rowLogOut);
     }
 
-    /**
-     * Clip ivProfilePhoto jadi lingkaran sempurna, apapun bentuk/aspect ratio
-     * gambar yang dimuat (icon default maupun foto asli dari galeri).
-     * Ini yang bikin foto CENTER_CROP tetap keliatan bulat, bukan kotak.
-     */
     private void setupCircularAvatar() {
         ivProfilePhoto.setOutlineProvider(new ViewOutlineProvider() {
             @Override
@@ -128,115 +106,49 @@ public class ProfileActivity extends AppCompatActivity {
     private void loadUserData() {
         UserEntity user = userDao.getUserById(currentUserId);
         if (user == null) return;
-
         tvProfileName.setText(user.getBio() != null ? user.getBio() : "No Name");
         tvUsername.setText("@" + user.getUsername());
         showProfilePhoto(user.getProfileImage());
     }
 
-    /**
-     * Load foto profil dari path internal storage yang disimpan EditProfileActivity.
-     * Kalau belum ada foto / file tidak ditemukan, fallback ke icon default.
-     */
     private void showProfilePhoto(String path) {
-        if (TextUtils.isEmpty(path)) {
-            setDefaultPhotoIcon();
-            return;
-        }
-
+        if (TextUtils.isEmpty(path)) { setDefaultPhotoIcon(); return; }
         File file = new File(path);
-        if (!file.exists()) {
-            setDefaultPhotoIcon();
-            return;
-        }
-
-        try {
-            ivProfilePhoto.setImageTintList(null);
-            ivProfilePhoto.setPadding(0, 0, 0, 0);
-            ivProfilePhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            ivProfilePhoto.setImageURI(Uri.fromFile(file));
-        } catch (Exception e) {
-            setDefaultPhotoIcon();
-        }
+        if (!file.exists()) { setDefaultPhotoIcon(); return; }
+        ivProfilePhoto.setImageURI(Uri.fromFile(file));
     }
 
     private void setDefaultPhotoIcon() {
-        int pad = (int) (8 * getResources().getDisplayMetrics().density);
-        ivProfilePhoto.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        ivProfilePhoto.setPadding(pad, pad, pad, pad);
         ivProfilePhoto.setImageResource(R.drawable.outline_account_circle_50);
         ivProfilePhoto.setImageTintList(ColorStateList.valueOf(Color.parseColor("#00E5A8")));
     }
 
-    /**
-     * Ambil 3 stats dari DiaryDao:
-     * - tvMovieCount -> total film berstatus WATCHED
-     * - tvThisYear   -> total film WATCHED yang watchDate-nya di tahun berjalan
-     * - tvAvgRating  -> rata-rata rating dari semua diary yang punya rating > 0
-     */
     private void loadUserStats() {
-        int totalWatched   = diaryDao.getTotalWatchedMovies(currentUserId);
-        int watchedThisYear = diaryDao.getWatchedThisYear(currentUserId);
-        float avgRating     = diaryDao.getAvgRating(currentUserId);
-
-        tvMovieCount.setText(String.valueOf(totalWatched));
-        tvThisYear.setText(String.valueOf(watchedThisYear));
-        tvAvgRating.setText(String.format(Locale.getDefault(), "%.1f", avgRating));
+        tvMovieCount.setText(String.valueOf(diaryDao.getTotalWatchedMovies(currentUserId)));
+        tvThisYear.setText(String.valueOf(diaryDao.getWatchedThisYear(currentUserId)));
+        tvAvgRating.setText(String.format(Locale.getDefault(), "%.1f", diaryDao.getAvgRating(currentUserId)));
     }
 
     private void setupClickListeners() {
         btnBack.setOnClickListener(v -> goToHome());
-        btnEditProfile.setOnClickListener(v -> startActivity(new Intent(this, EditProfileActivity.class)));
-
-        btnShare.setOnClickListener(v -> {
-            String name = tvProfileName.getText().toString();
-            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, "Cek profil film " + name + " di Moview!");
-            startActivity(Intent.createChooser(shareIntent, "Bagikan profil via"));
-        });
-
-        // Menuju ke halaman DiaryLogsActivity milik Rahma
-        btnDiary.setOnClickListener(v -> {
-            Intent intent = new Intent(this, DiaryLogsActivity.class);
-            startActivity(intent);
-        });
-        btnMovies.setOnClickListener(v -> Toast.makeText(this, "Movies — coming soon", Toast.LENGTH_SHORT).show());
+        btnEditProfile.setOnClickListener(v -> Toast.makeText(this, "Edit Profile — coming soon", Toast.LENGTH_SHORT).show());
+        btnShare.setOnClickListener(v -> Toast.makeText(this, "Share — coming soon", Toast.LENGTH_SHORT).show());
         btnDiary.setOnClickListener(v -> startActivity(new Intent(this, DiaryLogsActivity.class)));
         btnWatchlist.setOnClickListener(v -> startActivity(new Intent(this, WatchlistActivity.class)));
         btnFavorite.setOnClickListener(v -> startActivity(new Intent(this, FavoriteActivity.class)));
-
-        rowAppSettings.setOnClickListener(v -> Toast.makeText(this, "Settings — coming soon", Toast.LENGTH_SHORT).show());
-        rowAbout.setOnClickListener(v -> Toast.makeText(this, "About — coming soon", Toast.LENGTH_SHORT).show());
         rowLogOut.setOnClickListener(v -> showLogoutDialog());
-    }
-
-    private void setupDarkModeSwitch() {
-        boolean isDark = sharedPreferences.getBoolean("dark_mode", true);
-        switchDarkMode.setChecked(isDark);
-
-        switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            sharedPreferences.edit().putBoolean("dark_mode", isChecked).apply();
-            AppCompatDelegate.setDefaultNightMode(
-                    isChecked ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
-            );
-            recreate();
-        });
     }
 
     private void setupBottomNav() {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
         bottomNav.setSelectedItemId(R.id.menu_profile);
-
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (item.isChecked()) return false;
-
             Intent intent = null;
             if (id == R.id.menu_home) intent = new Intent(this, HomeActivity.class);
             else if (id == R.id.menu_search) intent = new Intent(this, SearchActivity.class);
             else if (id == R.id.menu_history) intent = new Intent(this, HistoryActivity.class);
-
             if (intent != null) {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
@@ -254,12 +166,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void showLogoutDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("Log Out")
-                .setMessage("Yakin ingin keluar?")
-                .setPositiveButton("Ya", (dialog, which) -> logout())
-                .setNegativeButton("Batal", null)
-                .show();
+        new AlertDialog.Builder(this).setTitle("Log Out").setMessage("Yakin ingin keluar?").setPositiveButton("Ya", (d, w) -> logout()).setNegativeButton("Batal", null).show();
     }
 
     private void logout() {

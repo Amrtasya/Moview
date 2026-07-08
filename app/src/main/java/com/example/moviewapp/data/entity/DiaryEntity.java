@@ -13,7 +13,8 @@ public class DiaryEntity {
     private int userId;
     private int tmdbId;
     private String title;
-    private String director; // Field baru
+    private String director;
+    private String genre; // Added genre field
     private String posterPath;
     private float rating;
     private String review;
@@ -29,7 +30,7 @@ public class DiaryEntity {
     }
 
     // Constructor lengkap
-    public DiaryEntity(int userId, int tmdbId, String title, String director,
+    public DiaryEntity(int userId, int tmdbId, String title, String director, String genre,
                        String posterPath, float rating, String review,
                        String watchStatus, String watchDate,
                        boolean isFavorite,
@@ -38,6 +39,7 @@ public class DiaryEntity {
         this.tmdbId = tmdbId;
         this.title = title;
         this.director = director;
+        this.genre = genre;
         this.posterPath = posterPath;
         this.rating = rating;
         this.review = review;
@@ -54,6 +56,7 @@ public class DiaryEntity {
     public int getTmdbId() { return tmdbId; }
     public String getTitle() { return title; }
     public String getDirector() { return director; }
+    public String getGenre() { return genre; }
     public String getPosterPath() { return posterPath; }
     public float getRating() { return rating; }
     public String getReview() { return review; }
@@ -69,6 +72,7 @@ public class DiaryEntity {
     public void setTmdbId(int tmdbId) { this.tmdbId = tmdbId; }
     public void setTitle(String title) { this.title = title; }
     public void setDirector(String director) { this.director = director; }
+    public void setGenre(String genre) { this.genre = genre; }
     public void setPosterPath(String posterPath) { this.posterPath = posterPath; }
     public void setRating(float rating) { this.rating = rating; }
     public void setReview(String review) { this.review = review; }

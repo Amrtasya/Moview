@@ -9,7 +9,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -22,6 +21,7 @@ import com.example.moviewapp.data.entity.FavoriteEntity;
 import com.example.moviewapp.ui.auth.LoginActivity;
 import com.example.moviewapp.ui.home.HomeActivity;
 import com.example.moviewapp.ui.movie.SearchActivity;
+import com.example.moviewapp.ui.profile.ProfileActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 
@@ -51,10 +51,7 @@ public class FavoriteActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(LoginActivity.PREF_NAME, Context.MODE_PRIVATE);
         currentUserId = sharedPreferences.getInt(LoginActivity.KEY_USER_ID, -1);
 
-        if (currentUserId == -1) {
-            finish();
-            return;
-        }
+        if (currentUserId == -1) { finish(); return; }
 
         btnBack.setOnClickListener(v -> finish());
         setupDropdownListeners();
@@ -64,7 +61,7 @@ public class FavoriteActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadFavoriteData(); // Auto-reload data setiap halaman dibuka
+        loadFavoriteData();
     }
 
     private void initView() {
@@ -90,22 +87,60 @@ public class FavoriteActivity extends AppCompatActivity {
     }
 
     private void setupDropdownListeners() {
-        chipAll.setOnClickListener(v -> { resetChipTexts(); displayData(allFavoritesList); });
+        chipAll.setOnClickListener(v -> {
+            resetChipTexts();
+            displayData(allFavoritesList);
+        });
+
 
         chipRating.setOnClickListener(v -> {
+            resetChipTexts(chipRating); // Memastikan chip lain ter-reset
             PopupMenu popup = new PopupMenu(this, chipRating);
-            popup.getMenu().add("⭐ 1+"); popup.getMenu().add("⭐ 2+");
-            popup.getMenu().add("⭐ 3+"); popup.getMenu().add("⭐ 4+");
+
+            // Menambahkan 5 pilihan rating agar seragam dengan HistoryActivity
+            popup.getMenu().add("⭐ 1+");
+            popup.getMenu().add("⭐ 2+");
+            popup.getMenu().add("⭐ 3+");
+            popup.getMenu().add("⭐ 4+");
             popup.getMenu().add("⭐ 5");
+
             popup.setOnMenuItemClickListener(item -> {
-                chipRating.setText(item.getTitle() + " ▼");
-                filterList("rating", item.getTitle().toString().replaceAll("[^0-9]", ""));
+                String ratingText = item.getTitle().toString();
+                chipRating.setText(ratingText + " ▼");
+
+                // Logika filter tetap sama, mengambil angka saja
+                String val = ratingText.replaceAll("[^0-9]", "");
+                filterList("rating", val);
                 return true;
             });
             popup.show();
         });
 
-        // ... (setup untuk chipGenre dan chipYear sama seperti sebelumnya)
+        chipGenre.setOnClickListener(v -> {
+            resetChipTexts(chipGenre);
+            PopupMenu popup = new PopupMenu(this, chipGenre);
+            String[] genres = {"Action", "Adventure", "Animation", "Comedy", "Drama", "Fantasy", "Horror", "Sci-Fi"};
+            for (String g : genres) popup.getMenu().add(g);
+            popup.setOnMenuItemClickListener(item -> {
+                chipGenre.setText(item.getTitle() + " ▼");
+                filterList("genre", item.getTitle().toString());
+                return true;
+            });
+            popup.show();
+        });
+
+        chipYear.setOnClickListener(v -> {
+            resetChipTexts(chipYear);
+            PopupMenu popup = new PopupMenu(this, chipYear);
+            String[] years = {"2026", "2025", "2024", "2023"};
+            for (String y : years) popup.getMenu().add(y);
+            popup.setOnMenuItemClickListener(item -> {
+                chipYear.setText(item.getTitle() + " ▼");
+                filterList("year", item.getTitle().toString());
+                return true;
+            });
+            popup.show();
+        });
     }
 
     private void filterList(String type, String value) {
@@ -130,14 +165,32 @@ public class FavoriteActivity extends AppCompatActivity {
         chipYear.setText("Year ▼");
     }
 
+    private void resetChipTexts(Chip excluded) {
+        if (excluded != chipRating) chipRating.setText("Rating ▼");
+        if (excluded != chipGenre) chipGenre.setText("Genre ▼");
+        if (excluded != chipYear) chipYear.setText("Year ▼");
+    }
+
     private void setupBottomNav() {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
         bottomNav.setSelectedItemId(R.id.menu_profile);
         bottomNav.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.menu_profile) return true;
-            if (item.getItemId() == R.id.menu_home) { startActivity(new Intent(this, HomeActivity.class)); finish(); return true; }
-            if (item.getItemId() == R.id.menu_search) { startActivity(new Intent(this, SearchActivity.class)); finish(); return true; }
-            return false;
+            int id = item.getItemId();
+            if (item.isChecked()) return false;
+
+            Intent intent = null;
+            if (id == R.id.menu_home) intent = new Intent(this, HomeActivity.class);
+            else if (id == R.id.menu_search) intent = new Intent(this, SearchActivity.class);
+            else if (id == R.id.menu_history) intent = new Intent(this, HistoryActivity.class);
+            else if (id == R.id.menu_profile) intent = new Intent(this, ProfileActivity.class);
+
+            if (intent != null) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                finish();
+            }
+            return true;
         });
     }
 }

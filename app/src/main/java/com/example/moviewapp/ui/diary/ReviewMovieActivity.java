@@ -165,11 +165,9 @@ public class ReviewMovieActivity extends AppCompatActivity {
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            // 1. CEK APAKAH FILM INI SUDAH ADA DI DIARY
             DiaryEntity existingDiary = diaryDao.getDiaryByTmdbId(currentUserId, tmdbId);
 
             if (existingDiary != null) {
-                // JIKA SUDAH ADA: UPDATE DATA LAMA
                 existingDiary.setWatchStatus(watchStatus);
                 existingDiary.setReview(reviewText);
                 existingDiary.setRating(ratingBar.getRating());
@@ -178,28 +176,24 @@ public class ReviewMovieActivity extends AppCompatActivity {
                 existingDiary.setFavorite(isMovieFavorite);
                 diaryDao.update(existingDiary);
             } else {
-                // JIKA BELUM ADA: INSERT BARU
-                diaryDao.insert(new DiaryEntity(currentUserId, tmdbId, movieTitle, movieDirector, posterPath,
+                diaryDao.insert(new DiaryEntity(currentUserId, tmdbId, movieTitle, movieDirector, genre, posterPath,
                         ratingBar.getRating(), reviewText, watchStatus, watchDate, isMovieFavorite, currentTime, currentTime));
             }
 
-            // 2. LOGIKA HAPUS DARI WATCHLIST JIKA SUDAH DITONTON
             if (watchStatus.equals("WATCHED")) {
                 watchlistDao.deleteByMovieId(currentUserId, tmdbId);
             } else if (watchStatus.equals("WATCHLIST")) {
-                // Opsional: Jika user berubah pikiran dari WATCHED ke WATCHLIST lagi
-                // Pastikan insert kembali ke watchlist
                 watchlistDao.insert(new WatchlistEntity(currentUserId, tmdbId, movieTitle, posterPath, genre, watchDate));
             }
 
-            // 3. Simpan ke Favorite
             if (isMovieFavorite) {
                 favoriteDao.insert(new FavoriteEntity(currentUserId, tmdbId, movieTitle, posterPath, watchDate, genre, (double) ratingBar.getRating()));
             }
 
             runOnUiThread(() -> {
                 Toast.makeText(this, "Data Saved Successfully!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, watchStatus.equals("WATCHLIST") ? WatchlistActivity.class : DiaryLogsActivity.class);
+                // Selalu arahkan ke HistoryActivity
+                Intent intent = new Intent(this, HistoryActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
