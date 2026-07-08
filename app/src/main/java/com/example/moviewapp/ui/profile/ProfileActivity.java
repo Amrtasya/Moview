@@ -2,7 +2,14 @@ package com.example.moviewapp.ui.profile;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.Outline;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.view.ViewOutlineProvider;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -27,6 +34,7 @@ import com.example.moviewapp.ui.diary.WatchlistActivity;
 import com.example.moviewapp.ui.diary.FavoriteActivity; // Import halaman Favorite kamu
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.File;
 import java.util.Locale;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -69,6 +77,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         bindViews();
+        setupCircularAvatar();
         loadUserData();
         loadUserStats();
         setupClickListeners();
@@ -100,12 +109,62 @@ public class ProfileActivity extends AppCompatActivity {
         rowLogOut      = findViewById(R.id.rowLogOut);
     }
 
+    /**
+     * Clip ivProfilePhoto jadi lingkaran sempurna, apapun bentuk/aspect ratio
+     * gambar yang dimuat (icon default maupun foto asli dari galeri).
+     * Ini yang bikin foto CENTER_CROP tetap keliatan bulat, bukan kotak.
+     */
+    private void setupCircularAvatar() {
+        ivProfilePhoto.setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                outline.setOval(0, 0, view.getWidth(), view.getHeight());
+            }
+        });
+        ivProfilePhoto.setClipToOutline(true);
+    }
+
     private void loadUserData() {
         UserEntity user = userDao.getUserById(currentUserId);
         if (user == null) return;
 
         tvProfileName.setText(user.getBio() != null ? user.getBio() : "No Name");
         tvUsername.setText("@" + user.getUsername());
+        showProfilePhoto(user.getProfileImage());
+    }
+
+    /**
+     * Load foto profil dari path internal storage yang disimpan EditProfileActivity.
+     * Kalau belum ada foto / file tidak ditemukan, fallback ke icon default.
+     */
+    private void showProfilePhoto(String path) {
+        if (TextUtils.isEmpty(path)) {
+            setDefaultPhotoIcon();
+            return;
+        }
+
+        File file = new File(path);
+        if (!file.exists()) {
+            setDefaultPhotoIcon();
+            return;
+        }
+
+        try {
+            ivProfilePhoto.setImageTintList(null);
+            ivProfilePhoto.setPadding(0, 0, 0, 0);
+            ivProfilePhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            ivProfilePhoto.setImageURI(Uri.fromFile(file));
+        } catch (Exception e) {
+            setDefaultPhotoIcon();
+        }
+    }
+
+    private void setDefaultPhotoIcon() {
+        int pad = (int) (8 * getResources().getDisplayMetrics().density);
+        ivProfilePhoto.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        ivProfilePhoto.setPadding(pad, pad, pad, pad);
+        ivProfilePhoto.setImageResource(R.drawable.outline_account_circle_50);
+        ivProfilePhoto.setImageTintList(ColorStateList.valueOf(Color.parseColor("#00E5A8")));
     }
 
     /**
