@@ -1,6 +1,7 @@
 package com.example.moviewapp.ui.diary;
 
 import android.app.DatePickerDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.example.moviewapp.R;
 import com.example.moviewapp.data.database.DatabaseClient;
 import com.example.moviewapp.data.entity.DiaryEntity;
+import com.example.moviewapp.data.entity.FavoriteEntity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,12 +33,13 @@ public class EditReviewActivity extends AppCompatActivity {
     private RatingBar ratingBar;
     private RadioGroup rgWatchStatus;
     private Button btnEditEntry, btnDelete;
-    private ImageView imgBackdrop;
-    private LinearLayout btnBack; // Sudah diubah ke LinearLayout sesuai XML
+    private ImageView imgBackdrop, btnFavorite;
+    private LinearLayout btnBack;
     private TextView txtTitle, txtDirector;
 
     private int diaryId;
     private DiaryEntity diaryData;
+    private boolean isMovieFavorite = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,11 @@ public class EditReviewActivity extends AppCompatActivity {
         btnEditEntry.setOnClickListener(v -> updateReview());
         btnDelete.setOnClickListener(v -> deleteReview());
         btnBack.setOnClickListener(v -> finish());
+
+        btnFavorite.setOnClickListener(v -> {
+            isMovieFavorite = !isMovieFavorite;
+            updateFavoriteUI();
+        });
     }
 
     private void initView() {
@@ -69,8 +77,13 @@ public class EditReviewActivity extends AppCompatActivity {
         imgBackdrop = findViewById(R.id.imgBackdrop);
         txtTitle = findViewById(R.id.txtTitle);
         txtDirector = findViewById(R.id.txtDirector);
-        // btnBack sekarang adalah LinearLayout
         btnBack = findViewById(R.id.btnBack);
+        btnFavorite = findViewById(R.id.btnFavorite);
+    }
+
+    private void updateFavoriteUI() {
+        btnFavorite.setImageResource(isMovieFavorite ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off);
+        btnFavorite.setColorFilter(isMovieFavorite ? Color.parseColor("#FFD700") : Color.WHITE);
     }
 
     private void setupDatePicker() {
@@ -89,7 +102,9 @@ public class EditReviewActivity extends AppCompatActivity {
             try {
                 diaryData = DatabaseClient.getInstance(this).diaryDao().getDiaryById(id);
                 if (diaryData != null && !isFinishing()) {
+                    isMovieFavorite = diaryData.isFavorite();
                     runOnUiThread(() -> {
+                        updateFavoriteUI();
                         etReview.setText(diaryData.getReview());
                         ratingBar.setRating(diaryData.getRating());
                         edtWatchDate.setText(diaryData.getWatchDate());
@@ -124,14 +139,28 @@ public class EditReviewActivity extends AppCompatActivity {
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
+            // Update data object
             diaryData.setReview(etReview.getText().toString());
             diaryData.setRating(ratingBar.getRating());
             diaryData.setWatchDate(edtWatchDate.getText().toString());
             diaryData.setWatchStatus(newStatus);
+            diaryData.setFavorite(isMovieFavorite); // Update status favorit di tabel diary
             diaryData.setUpdatedAt(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date()));
 
+            // Simpan perubahan ke tabel diary
             DatabaseClient.getInstance(this).diaryDao().update(diaryData);
 
+            // Sinkronisasi tabel favorite
+            if (isMovieFavorite) {
+                DatabaseClient.getInstance(this).favoriteDao().insert(new FavoriteEntity(
+                        diaryData.getUserId(), diaryData.getTmdbId(), diaryData.getTitle(),
+                        diaryData.getPosterPath(), diaryData.getWatchDate(), "", (double) diaryData.getRating()
+                ));
+            } else {
+                DatabaseClient.getInstance(this).favoriteDao().deleteByTmdbId(diaryData.getUserId(), diaryData.getTmdbId());
+            }
+
+            // Hapus dari watchlist jika sudah ditonton
             if (newStatus.equals("WATCHED")) {
                 DatabaseClient.getInstance(this).watchlistDao().deleteByMovieId(
                         diaryData.getUserId(),

@@ -3,6 +3,7 @@ package com.example.moviewapp.data.dao;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.example.moviewapp.data.entity.FavoriteEntity;
@@ -12,11 +13,13 @@ import java.util.List;
 @Dao
 public interface FavoriteDao {
 
-    @Insert
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(FavoriteEntity movie);
 
     @Delete
     void delete(FavoriteEntity movie);
+
 
     @Query("DELETE FROM favorite WHERE userId = :userId AND tmdbId = :tmdbId")
     void deleteByTmdbId(int userId, int tmdbId);

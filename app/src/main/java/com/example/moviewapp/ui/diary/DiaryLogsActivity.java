@@ -76,13 +76,10 @@ public class DiaryLogsActivity extends AppCompatActivity {
         setupBottomNav();
     }
 
-    // TAMBAHAN: Agar data otomatis update saat kembali dari EditReviewActivity
     @Override
     protected void onResume() {
         super.onResume();
-        // Memuat ulang data dari database agar perubahan edit/delete langsung terlihat
         loadDataAll();
-        // Reset filter ke "All" agar tidak bingung saat data berubah
         changeChipSelectionStyle(chipAll);
         chipRating.setText("Rating ▼");
     }
@@ -170,9 +167,18 @@ public class DiaryLogsActivity extends AppCompatActivity {
 
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
-            if (id == R.id.menu_profile) { finish(); return true; }
-            if (id == R.id.menu_home) { startActivity(new Intent(this, HomeActivity.class)); finish(); return true; }
-            if (id == R.id.menu_search) { startActivity(new Intent(this, SearchActivity.class)); finish(); return true; }
+            // Jika diklik Profile, tidak melakukan apa-apa (tidak menutup activity)
+            if (id == R.id.menu_profile) { return true; }
+            if (id == R.id.menu_home) {
+                startActivity(new Intent(this, HomeActivity.class));
+                finish();
+                return true;
+            }
+            if (id == R.id.menu_search) {
+                startActivity(new Intent(this, SearchActivity.class));
+                finish();
+                return true;
+            }
             return false;
         });
     }

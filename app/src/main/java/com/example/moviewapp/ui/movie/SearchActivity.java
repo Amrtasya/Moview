@@ -1,35 +1,32 @@
 package com.example.moviewapp.ui.movie;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moviewapp.R;
+import com.example.moviewapp.adapter.MovieAdapter;
 import com.example.moviewapp.api.ApiService;
 import com.example.moviewapp.api.RetrofitClient;
-import com.example.moviewapp.model.Movie;
 import com.example.moviewapp.model.MovieResponse;
-import com.example.moviewapp.adapter.MovieAdapter;
+import com.example.moviewapp.ui.diary.HistoryActivity;
+import com.example.moviewapp.ui.home.HomeActivity;
+import com.example.moviewapp.ui.profile.ProfileActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.PopupMenu;
-
-import android.content.Intent;
-
-import com.example.moviewapp.ui.home.HomeActivity;
-import com.example.moviewapp.ui.profile.ProfileActivity;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -87,27 +84,33 @@ public class SearchActivity extends AppCompatActivity {
             }
 
             if (id == R.id.menu_home) {
-                startActivity(new Intent(SearchActivity.this, HomeActivity.class));
+                Intent intent = new Intent(SearchActivity.this, HomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
                 overridePendingTransition(0, 0);
-                finish();
                 return true;
             }
 
             if (id == R.id.menu_history) {
-                Toast.makeText(SearchActivity.this, "History — coming soon", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(SearchActivity.this, HistoryActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
                 return true;
             }
 
             if (id == R.id.menu_profile) {
-                startActivity(new Intent(SearchActivity.this, ProfileActivity.class));
+                Intent intent = new Intent(SearchActivity.this, ProfileActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
                 overridePendingTransition(0, 0);
-                finish();
                 return true;
             }
 
             return false;
         });
 
+        // ... (sisanya tidak saya ubah sama sekali agar tidak error)
         btnGenre.setOnClickListener(v -> {
             PopupMenu popup = new PopupMenu(this, btnGenre);
             popup.getMenu().add("Action");

@@ -59,13 +59,16 @@
             android:name=".ui.diary.ReviewMovieActivity"
             android:exported="false"/>
 
-        <!-- Tambahkan baris ini -->
         <activity
             android:name=".ui.diary.EditReviewActivity"
             android:exported="false"/>
 
         <activity
             android:name=".ui.diary.FavoriteActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.diary.HistoryActivity"
             android:exported="false"/>
 
     </application>

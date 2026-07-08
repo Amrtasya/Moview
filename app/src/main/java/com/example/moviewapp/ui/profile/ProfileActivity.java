@@ -25,7 +25,8 @@ import com.example.moviewapp.ui.home.HomeActivity;
 import com.example.moviewapp.ui.movie.SearchActivity;
 import com.example.moviewapp.ui.diary.DiaryLogsActivity;
 import com.example.moviewapp.ui.diary.WatchlistActivity;
-import com.example.moviewapp.ui.diary.FavoriteActivity; // Import halaman Favorite kamu
+import com.example.moviewapp.ui.diary.FavoriteActivity;
+import com.example.moviewapp.ui.diary.HistoryActivity; // Import ini penting!
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -109,46 +110,23 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
         btnBack.setOnClickListener(v -> goToHome());
-
-        btnEditProfile.setOnClickListener(v ->
-                startActivity(new Intent(this, EditProfileActivity.class)));
+        btnEditProfile.setOnClickListener(v -> startActivity(new Intent(this, EditProfileActivity.class)));
 
         btnShare.setOnClickListener(v -> {
             String name = tvProfileName.getText().toString();
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_TEXT,
-                    "Cek profil film " + name + " di Moview!");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "Cek profil film " + name + " di Moview!");
             startActivity(Intent.createChooser(shareIntent, "Bagikan profil via"));
         });
 
-        btnMovies.setOnClickListener(v ->
-                Toast.makeText(this, "Movies — coming soon", Toast.LENGTH_SHORT).show());
+        btnMovies.setOnClickListener(v -> Toast.makeText(this, "Movies — coming soon", Toast.LENGTH_SHORT).show());
+        btnDiary.setOnClickListener(v -> startActivity(new Intent(this, DiaryLogsActivity.class)));
+        btnWatchlist.setOnClickListener(v -> startActivity(new Intent(this, WatchlistActivity.class)));
+        btnFavorite.setOnClickListener(v -> startActivity(new Intent(this, FavoriteActivity.class)));
 
-        // Menuju ke halaman DiaryLogsActivity milik Rahma
-        btnDiary.setOnClickListener(v -> {
-            Intent intent = new Intent(this, DiaryLogsActivity.class);
-            startActivity(intent);
-        });
-
-        // Menuju ke halaman WatchlistActivity milik Rahma
-        btnWatchlist.setOnClickListener(v -> {
-            Intent intent = new Intent(this, WatchlistActivity.class);
-            startActivity(intent);
-        });
-
-        // Menuju ke halaman FavoriteActivity milik Rahma
-        btnFavorite.setOnClickListener(v -> {
-            Intent intent = new Intent(this, FavoriteActivity.class);
-            startActivity(intent);
-        });
-
-        rowAppSettings.setOnClickListener(v ->
-                Toast.makeText(this, "Settings — coming soon", Toast.LENGTH_SHORT).show());
-
-        rowAbout.setOnClickListener(v ->
-                Toast.makeText(this, "About — coming soon", Toast.LENGTH_SHORT).show());
-
+        rowAppSettings.setOnClickListener(v -> Toast.makeText(this, "Settings — coming soon", Toast.LENGTH_SHORT).show());
+        rowAbout.setOnClickListener(v -> Toast.makeText(this, "About — coming soon", Toast.LENGTH_SHORT).show());
         rowLogOut.setOnClickListener(v -> showLogoutDialog());
     }
 
@@ -159,8 +137,7 @@ public class ProfileActivity extends AppCompatActivity {
         switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
             sharedPreferences.edit().putBoolean("dark_mode", isChecked).apply();
             AppCompatDelegate.setDefaultNightMode(
-                    isChecked ? AppCompatDelegate.MODE_NIGHT_YES
-                            : AppCompatDelegate.MODE_NIGHT_NO
+                    isChecked ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
             );
             recreate();
         });
@@ -172,32 +149,25 @@ public class ProfileActivity extends AppCompatActivity {
 
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
+            if (item.isChecked()) return false;
 
-            if (id == R.id.menu_profile) return true;
+            Intent intent = null;
+            if (id == R.id.menu_home) intent = new Intent(this, HomeActivity.class);
+            else if (id == R.id.menu_search) intent = new Intent(this, SearchActivity.class);
+            else if (id == R.id.menu_history) intent = new Intent(this, HistoryActivity.class);
 
-            if (id == R.id.menu_home) {
-                goToHome();
-                return true;
-            }
-            if (id == R.id.menu_search) {
-                Intent intent = new Intent(this, SearchActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            if (intent != null) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
-                finish();
-                return true;
+                overridePendingTransition(0, 0);
             }
-            if (id == R.id.menu_history) {
-                Toast.makeText(this, "History — coming soon", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-
-            return false;
+            return true;
         });
     }
 
     private void goToHome() {
         Intent intent = new Intent(this, HomeActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
         finish();
     }
@@ -212,10 +182,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void logout() {
-        sharedPreferences.edit()
-                .remove(LoginActivity.KEY_IS_LOGGED_IN)
-                .remove(LoginActivity.KEY_USER_ID)
-                .apply();
+        sharedPreferences.edit().remove(LoginActivity.KEY_IS_LOGGED_IN).remove(LoginActivity.KEY_USER_ID).apply();
         Toast.makeText(this, "Berhasil logout", Toast.LENGTH_SHORT).show();
         goToLogin();
     }

@@ -17,6 +17,7 @@ import com.example.moviewapp.adapter.HomeMovieAdapter;
 import com.example.moviewapp.api.ApiService;
 import com.example.moviewapp.api.RetrofitClient;
 import com.example.moviewapp.model.MovieResponse;
+import com.example.moviewapp.ui.diary.HistoryActivity;
 import com.example.moviewapp.ui.movie.SearchActivity;
 import com.example.moviewapp.ui.profile.ProfileActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -89,9 +90,11 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             }
 
-            // SUDAH DIPERBAIKI: Tidak lagi mengarah ke DiaryLogsActivity
+            // SUDAH DIPERBAIKI: Langsung mengarah ke HistoryActivity
             if (id == R.id.menu_history) {
-                Toast.makeText(HomeActivity.this, "History — coming soon", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(HomeActivity.this, HistoryActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
                 return true;
             }
 

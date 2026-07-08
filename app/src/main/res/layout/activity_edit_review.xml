@@ -21,13 +21,11 @@
             android:paddingHorizontal="16dp"
             android:clickable="true"
             android:focusable="true">
-
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_media_previous"
                 app:tint="#00E5A8" />
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -38,12 +36,24 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/imgBackdrop"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:alpha="0.7" />
+            android:layout_height="200dp">
+            <ImageView
+                android:id="@+id/imgBackdrop"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:alpha="0.7" />
+            <ImageView
+                android:id="@+id/btnFavorite"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="end|bottom"
+                android:padding="12dp"
+                android:src="@android:drawable/btn_star_big_off"
+                app:tint="#FFFFFF" />
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,66 +65,22 @@
             <TextView android:id="@+id/txtDirector" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Director" android:textColor="#888888"/>
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="Watch Status" android:textColor="#00E5A8" />
-            <RadioGroup
-                android:id="@+id/rgWatchStatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            <RadioGroup android:id="@+id/rgWatchStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
                 <RadioButton android:id="@+id/rbWatched" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Watched" android:textColor="#FFFFFF" />
                 <RadioButton android:id="@+id/rbWatchlist" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:text="Watchlist" android:textColor="#FFFFFF" />
             </RadioGroup>
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="Watch Date" android:textColor="#00E5A8" />
-            <EditText
-                android:id="@+id/edtWatchDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:focusable="false"
-                android:clickable="true"
-                android:hint="Select Date"
-                android:textColorHint="#555555"
-                android:backgroundTint="#00E5A8" />
+            <EditText android:id="@+id/edtWatchDate" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#FFFFFF" android:focusable="false" android:clickable="true" android:hint="Select Date" android:textColorHint="#555555" android:backgroundTint="#00E5A8" />
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="Rating" android:textColor="#00E5A8" />
-            <RatingBar
-                android:id="@+id/ratingBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:numStars="5"
-                android:stepSize="0.5"
-                android:progressTint="#FFD700" />
+            <RatingBar android:id="@+id/ratingBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:numStars="5" android:stepSize="0.5" android:progressTint="#FFD700" />
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="Review" android:textColor="#00E5A8" />
-            <EditText
-                android:id="@+id/etReview"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:backgroundTint="#00E5A8"
-                android:gravity="top"
-                android:padding="8dp"
-                android:textColor="#FFFFFF"
-                android:hint="Write your review here..."
-                android:textColorHint="#555555"
-                android:maxLength="500" />
+            <EditText android:id="@+id/etReview" android:layout_width="match_parent" android:layout_height="120dp" android:backgroundTint="#00E5A8" android:gravity="top" android:padding="8dp" android:textColor="#FFFFFF" android:hint="Write your review here..." android:textColorHint="#555555" android:maxLength="500" />
 
-            <Button
-                android:id="@+id/btnEditEntry"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Update Entry"
-                android:backgroundTint="#00E5A8"
-                android:textColor="#000000"
-                android:layout_marginTop="24dp" />
-
-            <Button
-                android:id="@+id/btnDelete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Delete Permanently"
-                android:backgroundTint="#FF4B4B"
-                android:textColor="#FFFFFF"
-                android:layout_marginTop="8dp" />
+            <Button android:id="@+id/btnEditEntry" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Update Entry" android:backgroundTint="#00E5A8" android:textColor="#000000" android:layout_marginTop="24dp" />
+            <Button android:id="@+id/btnDelete" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Delete Permanently" android:backgroundTint="#FF4B4B" android:textColor="#FFFFFF" android:layout_marginTop="8dp" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

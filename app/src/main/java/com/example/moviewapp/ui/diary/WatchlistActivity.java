@@ -24,7 +24,7 @@ import com.example.moviewapp.data.entity.WatchlistEntity;
 import com.example.moviewapp.ui.auth.LoginActivity;
 import com.example.moviewapp.ui.home.HomeActivity;
 import com.example.moviewapp.ui.movie.SearchActivity;
-import com.example.moviewapp.ui.profile.ProfileActivity; // Pastikan import ini benar
+import com.example.moviewapp.ui.profile.ProfileActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -41,7 +41,7 @@ public class WatchlistActivity extends AppCompatActivity {
     private FloatingActionButton fabAdd;
     private EditText etSearch;
     private TextView txtEmpty;
-    private Chip chipAll, chipGenre, chipYear;
+    private Chip chipAll, chipGenre; // chipYear dihapus
 
     private WatchlistAdapter adapter;
     private List<WatchlistEntity> allWatchlistList = new ArrayList<>();
@@ -84,7 +84,7 @@ public class WatchlistActivity extends AppCompatActivity {
         txtEmpty = findViewById(R.id.txtEmpty);
         chipAll = findViewById(R.id.chipAll);
         chipGenre = findViewById(R.id.chipGenre);
-        chipYear = findViewById(R.id.chipYear);
+        // chipYear dihapus
 
         rvWatchlist.setLayoutManager(new GridLayoutManager(this, 2));
     }
@@ -137,25 +137,6 @@ public class WatchlistActivity extends AppCompatActivity {
             });
             popup.show();
         });
-
-        chipYear.setOnClickListener(v -> {
-            PopupMenu popup = new PopupMenu(this, chipYear);
-            String[] years = {"2026", "2025", "2024", "2023", "2022"};
-            for (String y : years) popup.getMenu().add(y);
-            popup.setOnMenuItemClickListener(menuItem -> {
-                String selectedYear = String.valueOf(menuItem.getTitle());
-                chipYear.setText(selectedYear + " ▼");
-                changeChipSelectionStyle(chipYear);
-                List<WatchlistEntity> filtered = new ArrayList<>();
-                for (WatchlistEntity item : allWatchlistList) {
-                    if (item.getAddedDate() != null && item.getAddedDate().contains(selectedYear))
-                        filtered.add(item);
-                }
-                displayData(filtered);
-                return true;
-            });
-            popup.show();
-        });
     }
 
     private void displayData(List<WatchlistEntity> list) {
@@ -167,7 +148,6 @@ public class WatchlistActivity extends AppCompatActivity {
     private void changeChipSelectionStyle(Chip selected) {
         chipAll.setChecked(selected == chipAll);
         chipGenre.setChecked(selected == chipGenre);
-        chipYear.setChecked(selected == chipYear);
     }
 
     private void setupBottomNav() {
@@ -176,7 +156,6 @@ public class WatchlistActivity extends AppCompatActivity {
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.menu_profile) {
-                // Ganti ProfileActivity.class dengan Activity Profil utamamu
                 startActivity(new Intent(this, ProfileActivity.class));
                 finish();
                 return true;
