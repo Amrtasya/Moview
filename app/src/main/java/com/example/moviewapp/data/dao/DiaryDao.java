@@ -28,31 +28,39 @@ public interface DiaryDao {
 
     // --- Query Data untuk UI ---
 
-    // Mengambil satu detail diary spesifik berdasarkan ID
     @Query("SELECT * FROM diary WHERE id = :id LIMIT 1")
     DiaryEntity getDiaryById(int id);
 
-    // [TAMBAHAN] Untuk cek apakah film sudah ada di diary (untuk logika Update/Insert)
     @Query("SELECT * FROM diary WHERE userId = :userId AND tmdbId = :tmdbId LIMIT 1")
     DiaryEntity getDiaryByTmdbId(int userId, int tmdbId);
 
-    // [TAMBAHAN] Untuk memfilter status (WATCHED atau WATCHLIST)
     @Query("SELECT * FROM diary WHERE userId = :userId AND watchStatus = :status ORDER BY watchDate DESC")
     List<DiaryEntity> getDiaryByStatus(int userId, String status);
 
-    // Mengambil semua catatan diary milik user tertentu
     @Query("SELECT * FROM diary WHERE userId = :userId ORDER BY watchDate DESC")
     List<DiaryEntity> getDiaryByUser(int userId);
 
-    // Mengambil semua diary tanpa filter user
     @Query("SELECT * FROM diary ORDER BY watchDate DESC")
     List<DiaryEntity> getAllDiary();
 
-    // Mengambil data untuk halaman Favorite
     @Query("SELECT * FROM diary WHERE userId = :userId AND isFavorite = 1 ORDER BY watchDate DESC")
     List<DiaryEntity> getFavoriteMovies(int userId);
 
-    // Tambahkan ini ke dalam DiaryDao.java
     @Query("SELECT * FROM diary WHERE userId = :userId AND watchStatus = 'WATCHLIST' ORDER BY watchDate DESC")
     List<DiaryEntity> getWatchlist(int userId);
+
+    // ===== TAMBAHAN: 3 query untuk stats di ProfileActivity =====
+
+    // Total film yang sudah ditonton → angka "MOVIES"
+    @Query("SELECT COUNT(*) FROM diary WHERE userId = :userId AND watchStatus = 'WATCHED'")
+    int getTotalWatchedMovies(int userId);
+
+    // Film yang ditonton tahun ini → angka "THIS YEAR"
+    // watchDate format String "yyyy-MM-dd", strftime mengambil tahun dari string tsb
+    @Query("SELECT COUNT(*) FROM diary WHERE userId = :userId AND watchStatus = 'WATCHED' AND strftime('%Y', watchDate) = strftime('%Y', 'now')")
+    int getWatchedThisYear(int userId);
+
+    // Rata-rata rating semua review user → angka "AVG. RATING"
+    @Query("SELECT COALESCE(AVG(rating), 0.0) FROM diary WHERE userId = :userId AND rating > 0")
+    float getAvgRating(int userId);
 }
